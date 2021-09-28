@@ -1,0 +1,10 @@
+.app-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.coming-soon {
+    text-align: center;
+}
