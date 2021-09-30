@@ -1,20 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Say Word</title>
-    <link rel="stylesheet" href="Assets/css/reset.css">
-    <link rel="stylesheet" href="Assets/css/styles.css">
-</head>
-<body>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="Assets/css/reset.css" />
+    <link rel="stylesheet" href="Assets/css/styles.css" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-light bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand">Say Word</a>
 
-    <main class='app-container'>
-        <div class='coming-soon'>
-            Say Word coming soon!
+        <form class="d-flex">
+          <button class="btn btn-sm btn-outline-secondary me-3" type="button">
+            Review
+          </button>
+          <button class="btn btn-sm btn-outline-secondary me-5" type="button">
+            Quiz
+          </button>
+          <input
+            class="form-control me-2"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+          />
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title ">Word Of The Day</h5>
+          </div>
+          <div class="modal-body">
+            <p>Modal body text goes here.</p>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            ><i class="material-icons"></i>
+              Listen
+            </button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">Add Word</button>
+          </div>
         </div>
-    </main>
-    
-</body>
+      </div>
+      <div class="row">
+        <div class="col wf">Definition goes here</div>
+      </div>
+    </div>
+
+    <!-- <div class="container my-5">
+      <h2>normal container</h2>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint, excepturi, ipsa earum sequi itaque rerum officia magni praesentium placeat consectetur laudantium. Qui dolore modi est exercitationem maxime blanditiis, deleniti ipsam commodi itaque accusamus repellat reiciendis adipisci voluptatum architecto molestiae velit dicta corporis voluptatem placeat omnis explicabo aliquam doloremque ab! Quam?</p>
+    </div> -->
+
+    <!-- <main class="app-container">
+      <div class="coming-soon">Say Word coming soon!</div>
+      
+    </main> -->
+
+    <!--Imported bootstrap cdn-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>
