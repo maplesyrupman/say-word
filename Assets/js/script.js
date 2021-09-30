@@ -80,4 +80,4 @@ function starTimer() {
     }, 1000);
   }
 
-getQuizCard();
+  getQuizCard();
