@@ -70,4 +70,22 @@
     text-align: center;
     width: 18%;
  
+.wf {
+  outline: 3px solid black;
+  margin-top: 30px;
+  padding-top: 50px;
+}
+.row {
+  min-height: 500px;
+}
+h5 {
+  text-align: center;
+}
+.modal-body {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+}
+.container {
+  text-align: center;
 }
