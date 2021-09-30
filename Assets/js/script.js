@@ -1,18 +1,18 @@
 const dictionary = (() => {
 
     const getDef = word => {
-        let apiUrl = `https://dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=15205c99-2cb8-498d-a9f9-f5bdc4865029`;
+        let apiUrl = `https://dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=eef68214-e15e-46fc-8e3b-5c0c4330f2db`;
 
         fetch(apiUrl).then(response => {
             if (response.ok) {
                 response.json().then(data => {
-
-                })
+                    console.log(createDefObj(data, word));
+                });
             }
         })
     }
     
-    const getAntSyn = (word) => {
+    const getAntSyn = word => {
         let apiUrl = `https://dictionaryapi.com/api/v3/references/thesaurus/json/${word}?key=15205c99-2cb8-498d-a9f9-f5bdc4865029`;
     
         fetch(apiUrl).then(response => {
@@ -33,14 +33,14 @@ const dictionary = (() => {
         let defObj = {
             word: word,
             audioUrl: getAudioUrl(defArr),
-            defs: [],
+            defs: []
         };
         for (let i=0; i< defArr.length; i++) {
             let currentDef = defArr[i];
             if (stripAstr(currentDef.hwi.hw) == word) {
                 let type = {
                     fl: currentDef.fl,
-                    defSentances: currentDef.shortdef,
+                    defSentances: currentDef.shortdef
                 };
                 defObj.defs.push(type);
             } else {
