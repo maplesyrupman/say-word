@@ -1,13 +1,16 @@
 const dictionary = (() => {
 
+    let words = {1word, 2word};
+
     const getDef = word => {
         let apiUrl = `https://dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=eef68214-e15e-46fc-8e3b-5c0c4330f2db`;
 
         fetch(apiUrl).then(response => {
             if (response.ok) {
                 response.json().then(data => {
-                    console.log(data);
-                    console.log(createDefObj(data, word));
+                    domOps.displayDef(createDefObj(data,word));
+
+                    words[word] = createDefObj(data, word);
                 });
             }
         })
@@ -59,12 +62,16 @@ const dictionary = (() => {
         return `https://media.merriam-webster.com/audio/prons/en/us/mp3/${subdirectory}/${baseFilename}.mp3`
     }
 
+    const getWords = () => {
+        return words;
+    }
 
     return {
         getDef, 
         getAntSyn,
         stripAstr,
-        getAudioUrl
+        getAudioUrl,
+        getWords
     }
 })();
 
@@ -77,3 +84,14 @@ const domOps = (() => {
         createDefCard,
     }
 })();
+
+const storage = (() => {
+
+    let sayhi = function () {
+        console.log('hi');
+    }
+
+    return {
+        sayhi
+    }
+})()
