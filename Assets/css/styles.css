@@ -1,10 +1,134 @@
 .app-container {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .coming-soon {
-    text-align: center;
+  text-align: center;
 }
+
+/* flex parent */
+.quiz-flex-container {
+  /* create flexbox */
+  display: none;
+  /* instruct it to break onto next line if it runs out of space */
+  flex-wrap: wrap;
+  /* put all unused space between items */
+  justify-content: space-between;
+
+  width: 100%;
+  justify-content: center;
+  
+  
+ 
+}
+
+/* flex child */
+.quiz-flex-item {
+  /* make each one 45%, putting 10% between each element on the page */
+  width: 50%;
+  margin: 5px;
+  /* rounded corners */
+  border-radius: 14px;
+  border: 4px solid black;
+  background-color: #393b4f;
+  font-size: 22px;
+  font-weight: bold;
+  height: 500px;
+
+  /* put space between each one vertically */
+  margin-bottom: 15px;
+
+  /* padding top and bottom 20px, 0 for left/right */
+  padding: 20px 0;
+
+  /* set minimum heigh value so there's room */
+  min-height: 250px;
+
+  /* rather than use position...use flexbox and create column instead of row */
+  display: flex;
+  flex-direction: column;
+}
+/* flex parent */
+.landing-flex-container {
+  /* create flexbox */
+  display: flex;
+  /* instruct it to break onto next line if it runs out of space */
+  flex-wrap: wrap;
+  /* put all unused space between items */
+  justify-content: space-between;
+
+  width: 100%;
+  justify-content: center;
+  
+}
+
+/* flex child */
+.landing-flex-item {
+  /* make each one 45%, putting 10% between each element on the page */
+  width: 50%;
+  margin: 5px;
+  /* rounded corners */
+  border-radius: 14px;
+  border: 4px solid black;
+  background-color: #393b4f;
+  font-size: 22px;
+  font-weight: bold;
+  height: 500px;
+
+  /* put space between each one vertically */
+  margin-bottom: 15px;
+
+  /* padding top and bottom 20px, 0 for left/right */
+  padding: 20px 0;
+
+  /* set minimum heigh value so there's room */
+  min-height: 250px;
+
+  /* rather than use position...use flexbox and create column instead of row */
+  display: flex;
+  flex-direction: column;
+}
+
+
+.one {
+  background-color: honeydew;
+}
+
+.one h3,h5{
+    text-align: center
+}
+
+.one h5{
+    color:blue
+}
+
+.start-button{
+    text-align: center;
+    width: 18%;
+}
+
+.wf {
+  outline: 3px solid black;
+  margin-top: 30px;
+  padding-top: 50px;
+}
+.row {
+  min-height: 500px;
+}
+h5 {
+  text-align: center;
+}
+.modal-body {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+}
+.container {
+  text-align: center;
+}
+
+
+
