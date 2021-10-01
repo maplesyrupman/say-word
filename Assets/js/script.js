@@ -9,7 +9,28 @@ var para3 = document.createElement("p");
 var quizTilte = document.createElement("h3");
 //Time
 var timeEl = document.querySelector("#cnt");
-addedWordsToLocalStorage=["aple","test","test","test","test"];
+
+let testDefObj = {
+    word: 'interest',
+    audioUrl: 'https://media.merriam-webster.com/audio/prons/en/us/mp3/i/intere01.mp3',
+    defs: [
+        {
+            fl: 'noun',
+            defSentances: [
+                "a feeling that accompanies or causes special attention to something or someone : concern", 
+                "something or someone that arouses such attention",
+                "a quality in a thing or person arousing interest"
+            ]
+        },
+        {
+            fl: 'adjective',
+            defSentances: [
+                "to engage the attention or arouse the interest of",
+                "to induce or persuade to participate or engage"
+            ]
+        }
+    ]
+}
 
 const dictionary = (() => {
 
@@ -21,7 +42,6 @@ const dictionary = (() => {
         fetch(apiUrl).then(response => {
             if (response.ok) {
                 response.json().then(data => {
-                    domOps.displayDef(createDefObj(data,word));
 
                     words[word] = createDefObj(data, word);
                 });
