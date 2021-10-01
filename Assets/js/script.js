@@ -13,7 +13,7 @@ addedWordsToLocalStorage=["aple","test","test","test","test"];
 
 const dictionary = (() => {
 
-    let words = {1word, 2word};
+    let words = {};
 
     const getDef = word => {
         let apiUrl = `https://dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=eef68214-e15e-46fc-8e3b-5c0c4330f2db`;
