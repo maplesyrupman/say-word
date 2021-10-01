@@ -6,6 +6,7 @@ const dictionary = (() => {
         fetch(apiUrl).then(response => {
             if (response.ok) {
                 response.json().then(data => {
+                    console.log(data);
                     console.log(createDefObj(data, word));
                 });
             }
@@ -64,5 +65,15 @@ const dictionary = (() => {
         getAntSyn,
         stripAstr,
         getAudioUrl
+    }
+})();
+
+const domOps = (() => {
+    const createDefCard = (defObj) => {
+        let definitionCard = document.createElement('div');
+    }
+
+    return {
+        createDefCard,
     }
 })();
