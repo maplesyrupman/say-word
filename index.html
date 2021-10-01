@@ -33,8 +33,8 @@
           <button class="btn btn-sm btn-outline-secondary me-3" type="button">
             Review
           </button>
-          <button class="btn btn-sm btn-outline-secondary me-5" type="button" onclick=" getQuizCard()">
-            Quiz
+          <button class="btn btn-sm btn-outline-secondary me-5" type="button" onclick="getQuizCard()">
+            Start Quiz
           </button>
           <input
             class="form-control me-2"
@@ -56,9 +56,9 @@
 
     
         <div class="quiz-flex-container">
-            <div class="quiz-flex-item one">
-                <h3>Quiz</h3>
-                <h5>Time: <span id="cnt"></span></h5>
+            <div class="quiz-flex-item one" id="quiz-flex-item">
+                <h3 id="quiz-title"></h3><br/>
+                <h5>Time: <span id="cnt"></span></h5><br/><br/>
             </div>
         </div>
         

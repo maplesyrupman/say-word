@@ -36,7 +36,7 @@
   background-color: #393b4f;
   font-size: 22px;
   font-weight: bold;
-  height: 500px;
+  height: 600px;
 
   /* put space between each one vertically */
   margin-bottom: 15px;
@@ -105,10 +105,7 @@
     color:blue
 }
 
-.start-button{
-    text-align: center;
-    width: 18%;
-}
+
 
 .wf {
   outline: 3px solid black;
@@ -130,5 +127,31 @@ h5 {
   text-align: center;
 }
 
+.list-group-item{
+  width: 93%;
+}
+
+h5{
+  margin-top: 25px;
+}
+
+.text-box-guess{
+ width:25%;
+ margin-top:10px;
+ margin-left: 300px;
+}
+
+.text-lable{
+  margin-top:10px;
+  text-align : center;
+  
+}
+
+.quiz-button{
+  margin-top:10px;
+  width:25%;
+  align-items: center;
+  margin-left: 300px;
+}
 
 

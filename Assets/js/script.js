@@ -1,14 +1,19 @@
 
-var timecountdown = 45;
+var timecountdown = 120;
 var landingPage = document.getElementsByClassName('landing-flex-container');
 var quizCard =  document.getElementsByClassName('quiz-flex-container');
 var quizCardItem=document.getElementsByClassName('quiz-flex-item one');
 var para1 = document.createElement("p"); 
 var para2 = document.createElement("p"); 
 var para3 = document.createElement("p"); 
-var quizTilte = document.createElement("h3");
 //Time
 var timeEl = document.querySelector("#cnt");
+// Quiz title
+var quizTitle = document.querySelector("#quiz-title");
+var quizCardItem=document.querySelector("#quiz-flex-item");
+//Intial index
+var index=0;
+
 
 let testDefObj = {
     word: 'interest',
@@ -31,6 +36,9 @@ let testDefObj = {
         }
     ]
 }
+
+var listOfTestObject =[testDefObj,testDefObj,testDefObj,testDefObj,testDefObj];
+console.log(listOfTestObject[0]);
 
 const dictionary = (() => {
 
@@ -145,23 +153,25 @@ Description
 
 function getQuizCard(){
 
-    // need to put code to remove landing page element
-    landingPage[0].style.display='none';
+    
 
+   // Removing landing page element
+    landingPage[0].style.display='none';
+     
+    
       
-    if(this.addedWordsToLocalStorage.length<3){
+    if(this.listOfTestObject.length<3){
         prompt("Please add more words to take quiz.To memorize minimum 3 words should be added.");
     
     }else{
-       
+    
+       // Card style
        quizCard[0].style.display='flex';
-       starTimer();
-         
-       //var randomThreeWords;
 
-      /* for (let i = 0; i <3; i++) {
+       generateQuiz();
+      
         
-      }*/
+      
        
 
       
@@ -171,6 +181,65 @@ function getQuizCard(){
 
 
 }
+
+function generateQuiz(){
+     // Card title
+     this.quizTitle.textContent="Quiz";
+     var quizIns = document.createElement("p");
+     quizIns.classList.add("text-lable");
+     quizIns.textContent= "The following are definations/meanings of words: "
+     var quizUl= document.createElement("ul");
+     quizUl.classList.add("list-group");
+     quizUl.style.marginLeft = "50px";
+     quizUl.style.marginTop = "25px";
+     quizUl.style.marginBottom = "25px";
+     var quizLiOne= document.createElement("li");
+     var quizLiTwo= document.createElement("li");
+     var quizLiThree= document.createElement("li");
+     quizLiOne.classList.add("list-group-item");
+     quizLiOne.classList.add("list-group-item-success");
+     quizLiTwo.classList.add("list-group-item");
+     quizLiTwo.classList.add("list-group-item-primary");
+     quizLiThree.classList.add("list-group-item");
+     quizLiThree.classList.add("list-group-item-warning");
+     para1.textContent= "1. " + listOfTestObject[index].defs[0].defSentances[0];
+     para2.textContent= "2. " +listOfTestObject[index].defs[1].defSentances[0];
+     para3.textContent= "3. " +listOfTestObject[index].defs[0].defSentances[0];
+     quizLiOne.appendChild(para1);
+     quizLiTwo.appendChild(para2);
+     quizLiThree.appendChild(para3);
+     quizUl.appendChild(quizLiOne);
+     quizUl.appendChild(document.querySelector("br"));
+     quizUl.appendChild(quizLiTwo);
+     quizUl.appendChild(document.querySelector("br"));
+     quizUl.appendChild(quizLiThree);
+     quizUl.appendChild(document.querySelector("br"));
+     var labelTextbox = document.createElement("p");
+     labelTextbox.classList.add("text-lable");
+     labelTextbox.textContent= "Guess the word"
+     var textbox = document.createElement("INPUT");
+     textbox.setAttribute("type", "text");
+     textbox.classList.add("text-box-guess");
+     var button = document.createElement("button");
+     button.classList.add("btn");
+     button.classList.add("btn-primary");
+     button.classList.add("quiz-button");
+     button.textContent="Next"
+     var buttonLeave = document.createElement("button");
+     buttonLeave.classList.add("btn");
+     buttonLeave.classList.add("btn-danger");
+     buttonLeave.classList.add("quiz-button");
+     buttonLeave.textContent="Exit Quiz";
+     quizCardItem.appendChild(quizIns);
+     quizCardItem.appendChild(quizUl);
+     quizCardItem.appendChild(labelTextbox);
+     quizCardItem.appendChild(textbox);
+     quizCardItem.appendChild(button);
+     quizCardItem.appendChild(buttonLeave);
+     starTimer();
+
+}
+
 /*
 #########################################################
 Function name : starTimer()
@@ -182,8 +251,11 @@ Description
 function starTimer() {
     timeInterval = setInterval(function () {
       timecountdown--;
+      
+     
+    
   
-      this.timeEl.textContent = timecountdown;
+      timeEl.textContent = timecountdown;
   
       if (timecountdown === 0) {
         ShowScore();
