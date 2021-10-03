@@ -12,6 +12,7 @@ var quizTitle = document.querySelector("#quiz-title");
 var quizCardItem = document.querySelector("#quiz-flex-item");
 //Intial index
 var index = 0;
+var correctAnswer="";
 
 
 let testDefObj = {
@@ -180,8 +181,38 @@ function getQuizCard() {
 
 }
 
-function generateQuiz() {
+function generateQuiz(event) {
+    
+    document.getElementById("btn-strt-quiz").disabled = true;
+
+    
     // Card title
+    var listOfObject =[];
+    var wordsToTest=[];
+    var fetchedAddedWordsFromLocalStorage = JSON.parse(localStorage.getItem("addedWords"));
+    
+    
+    for (var i = 0, length = fetchedAddedWordsFromLocalStorage.length; i < length; i++) {
+        for (obj in fetchedAddedWordsFromLocalStorage[i]) {
+            
+            var attr = String(obj);
+            listOfObject.push(fetchedAddedWordsFromLocalStorage[i][attr]);
+        
+        }
+    }
+        
+    //console.log(listOfObject);
+
+    for(let i=0;i<3;i++){
+        
+        wordsToTest.push(listOfObject[i]);
+        
+    }
+
+      console.log(wordsToTest);
+     
+    
+    
     this.quizTitle.textContent = "Quiz";
     var quizIns = document.createElement("p");
     quizIns.classList.add("text-lable");
@@ -200,9 +231,12 @@ function generateQuiz() {
     quizLiTwo.classList.add("list-group-item-primary");
     quizLiThree.classList.add("list-group-item");
     quizLiThree.classList.add("list-group-item-warning");
-    para1.textContent = "1. " + listOfTestObject[index].defs[0].defSentances[0];
-    para2.textContent = "2. " + listOfTestObject[index].defs[1].defSentances[0];
-    para3.textContent = "3. " + listOfTestObject[index].defs[0].defSentances[0];
+    
+    
+    para1.textContent = wordsToTest[index].defs[0]!==undefined? "1. " + wordsToTest[index].defs[0].defSentances[0] :quizLiOne.style.display ="none";
+    para2.textContent = wordsToTest[index].defs[1]!==undefined? "2. " + wordsToTest[index].defs[1].defSentances[1]:quizLiTwo.style.display ="none";
+    para3.textContent = wordsToTest[index].defs[2]!==undefined? "3. " + wordsToTest[index].defs[2].defSentances[2]:quizLiThree.style.display ="none";
+    correctAnswer =wordsToTest[index].word;
     quizLiOne.appendChild(para1);
     quizLiTwo.appendChild(para2);
     quizLiThree.appendChild(para3);
@@ -217,6 +251,7 @@ function generateQuiz() {
     labelTextbox.textContent = "Guess the word"
     var textbox = document.createElement("INPUT");
     textbox.setAttribute("type", "text");
+    textbox.
     textbox.classList.add("text-box-guess");
     var button = document.createElement("button");
     button.classList.add("btn");
@@ -228,12 +263,23 @@ function generateQuiz() {
     buttonLeave.classList.add("btn-danger");
     buttonLeave.classList.add("quiz-button");
     buttonLeave.textContent = "Exit Quiz";
+    
+    var textboxDiv =document.createElement("div");
+    textboxDiv.classList.add("quiz-align");
+    var buttonDiv=document.createElement("div");
+    buttonDiv.classList.add("quiz-align");
+    var buttonLeaveDiv=document.createElement("div");
+    buttonLeaveDiv.classList.add("quiz-align");
+    textboxDiv.appendChild(textbox);
+    buttonDiv.appendChild(button);
+    buttonLeaveDiv.appendChild(buttonLeave);
     quizCardItem.appendChild(quizIns);
     quizCardItem.appendChild(quizUl);
     quizCardItem.appendChild(labelTextbox);
-    quizCardItem.appendChild(textbox);
-    quizCardItem.appendChild(button);
-    quizCardItem.appendChild(buttonLeave);
+    quizCardItem.appendChild(textboxDiv);
+    quizCardItem.appendChild(buttonDiv);
+    quizCardItem.appendChild(buttonLeaveDiv);
+
     starTimer();
 
 }
@@ -302,6 +348,21 @@ function addWordsToLocalStorage() {
     }
 
 
+    /*
+#########################################################
+Function name : addWordsToLocalStorage()
+Description
+- Create a list of searched words in localStorage
+Developer Name : Shanthoshkanna (y.shanthosh@gmail.com)
+#########################################################
+*/
+
+function onNext(){
+
+    index= index+1;
+    document.getElementsByClassName("");
+
+}
 
 
 
