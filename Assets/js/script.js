@@ -265,4 +265,39 @@ function starTimer() {
     }, 1000);
   }
 
+function  addWordsToLocalStorage(){
+    var searchedWords = dictionary.getWords();
+    console.log(searchedWords);
+    const key = "addedWords"; // Key for local storage
+    var Def = new Set(); // Set to avoid duplicates
+    const addedWords = JSON.parse(localStorage.getItem(localStorage.key(0)));
+    // Prompt to confirm adding words
+    var confirmBox = confirm("Do You Want To Add This To Your List?");
+    
+    // if word already exsists
+    if (confirmBox == true) {
+        if (addedWords != null) {
+            // Work in progress for prompt when duplicate
+            /*if (addedWords.includes(searchedWords)) {
+                window.alert("You Have Already Added This Word To Your List");
+                return
+    
+            }*/
+            Def = new Set([...addedWords]); // Sets cannot be saved and retrieved in local storage therefore convert Sets to Arrays while storing.
+        }
+
+        Def.add(searchedWords);
+        localStorage.setItem(key, JSON.stringify([...Def]));
+        
+        //location.reload();
+
+
+    }
+
+    
+
+
+   
+
+}
 
