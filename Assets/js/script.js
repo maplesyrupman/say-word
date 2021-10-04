@@ -251,7 +251,6 @@ function generateQuiz(event) {
     labelTextbox.textContent = "Guess the word"
     var textbox = document.createElement("INPUT");
     textbox.setAttribute("type", "text");
-    textbox.
     textbox.classList.add("text-box-guess");
     var button = document.createElement("button");
     button.classList.add("btn");
@@ -360,7 +359,7 @@ Developer Name : Shanthoshkanna (y.shanthosh@gmail.com)
 function onNext(){
 
     index= index+1;
-    document.getElementsByClassName("");
+    // document.getElementsByClassName("");
 
 }
 
