@@ -1,15 +1,12 @@
-var timecountdown = 120;
+var timecountdown = 90;
+var timeInterval;
 var landingPage = document.getElementsByClassName('landing-flex-container');
 var quizCard = document.getElementsByClassName('quiz-flex-container');
-//var quizCardItem = document.getElementsByClassName('quiz-flex-item one');
 var para1 = document.createElement("p");
 var para2 = document.createElement("p");
 var para3 = document.createElement("p");
 //Time
-//var timeEl = document.querySelector("#cnt");
 var time = document.createElement("h3");
-// Quiz title
-//var quizTitle = document.querySelector("#quiz-title");
 var quizCardId=document.querySelector("#quiz-flex-container-id");
 var quizCardItem = document.querySelector("#quiz-flex-item");
 //Intial index
@@ -142,17 +139,18 @@ const storage = (() => {
             sayhi
         }
     })()
-    /*
-    #########################################################
-    Function name : getQuizCard
-    Description
-    - Randomly use random 3 words from list of local storage words
-    - Display defination and ask for word
-    - Check right or wrong
-    - Display results or start quiz again
-    - To start quiz altleast three words should be added to local storage words
-    #########################################################
-    */
+
+/*
+#########################################################
+Function name : getQuizCard
+Description
+- Randomly use random 3 words from list of local storage words
+- Display defination and ask for word
+- Check right or wrong
+- Display results or start quiz again
+- To start quiz altleast three words should be added to local storage words
+ #########################################################
+*/
 
 
 
@@ -193,6 +191,14 @@ function getQuizCard() {
 
 
 }
+
+/*
+#########################################################
+Function name : generateQuiz()
+Description
+- Generates quiz from local storage
+ #########################################################
+*/
 
 function generateQuiz() {
 
@@ -283,6 +289,7 @@ function generateQuiz() {
     buttonLeave.classList.add("btn-danger");
     buttonLeave.classList.add("quiz-button");
     buttonLeave.textContent = "Exit Quiz";
+    buttonLeave.addEventListener("click",goToHome);
     var textboxDiv =document.createElement("div");
     textboxDiv.classList.add("quiz-align");
     var buttonDiv=document.createElement("div");
@@ -322,9 +329,9 @@ function starTimer() {
 
         time.style.color='blue';
         time.innerHTML = "<br/>Time: "+ timecountdown;
-        
+        console.log(1);
         if (timecountdown === 0) {
-            prompt("TIME UP !!");
+            alert("TIME UP !!");
             showScore();
           
         }
@@ -415,8 +422,9 @@ Description
 */
     
 function showScore(){
-    $(quizCardItem).empty();
+    console.log(timeInterval);
     clearInterval(timeInterval);
+    $(quizCardItem).empty();
      var showScoreTitle= document.createElement("h3");
      var score = document.createElement("p");
      var buttonDiv=document.createElement("div");
@@ -429,6 +437,7 @@ function showScore(){
      buttonHome.classList.add("btn-primary");
      buttonHome.classList.add("quiz-button");
      buttonHome.textContent = "Home Page"
+     buttonHome.addEventListener("click",goToHome);
      buttonDiv.appendChild(buttonHome);
      score.classList.add('quiz-align');
      showScoreTitle.textContent="YOUR SCORE IS: ";
@@ -439,6 +448,20 @@ function showScore(){
      quizCardItem.appendChild(buttonDiv);
 }
 
+/*
+#########################################################
+Function name : goToHome()
+Description
+- Logic to go to home page
+#########################################################
+*/
+function goToHome(){
+    console.log(timeInterval);
+    clearInterval(timeInterval);
+    quizCard[0].style.display = 'none';
+    landingPage[0].style.display = 'flex';
+    document.getElementById("btn-strt-quiz").disabled = false;
+}
 
 
 
