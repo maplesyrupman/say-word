@@ -1,18 +1,25 @@
 var timecountdown = 120;
 var landingPage = document.getElementsByClassName('landing-flex-container');
 var quizCard = document.getElementsByClassName('quiz-flex-container');
-var quizCardItem = document.getElementsByClassName('quiz-flex-item one');
+//var quizCardItem = document.getElementsByClassName('quiz-flex-item one');
 var para1 = document.createElement("p");
 var para2 = document.createElement("p");
 var para3 = document.createElement("p");
 //Time
-var timeEl = document.querySelector("#cnt");
+//var timeEl = document.querySelector("#cnt");
+var time = document.createElement("h3");
 // Quiz title
-var quizTitle = document.querySelector("#quiz-title");
+//var quizTitle = document.querySelector("#quiz-title");
+var quizCardId=document.querySelector("#quiz-flex-container-id");
 var quizCardItem = document.querySelector("#quiz-flex-item");
 //Intial index
 var index = 0;
 var correctAnswer="";
+var answerPara=document.createElement("p");
+var textbox = document.createElement("INPUT");
+textbox.setAttribute("type", "text");
+
+
 
 
 let testDefObj = {
@@ -152,7 +159,9 @@ const storage = (() => {
 
 function getQuizCard() {
 
+    
 
+     //console.log(index);
 
     // Removing landing page element
     landingPage[0].style.display = 'none';
@@ -165,8 +174,12 @@ function getQuizCard() {
     } else {
 
         // Card style
-        quizCard[0].style.display = 'flex';
 
+       
+        
+        
+        quizCard[0].style.display = 'flex';
+       
         generateQuiz();
 
 
@@ -181,9 +194,18 @@ function getQuizCard() {
 
 }
 
-function generateQuiz(event) {
+function generateQuiz() {
+
+    console.log(index);
+
+    if(index==3){
+        showScore();
+        return;
+    }
     
     document.getElementById("btn-strt-quiz").disabled = true;
+    answerPara.textContent="";
+    textbox.value="";
 
     
     // Card title
@@ -201,7 +223,7 @@ function generateQuiz(event) {
         }
     }
         
-    //console.log(listOfObject);
+    console.log(listOfObject);
 
     for(let i=0;i<3;i++){
         
@@ -212,8 +234,8 @@ function generateQuiz(event) {
       console.log(wordsToTest);
      
     
-    
-    this.quizTitle.textContent = "Quiz";
+    quizTitle=document.createElement("h3");
+    quizTitle.textContent = "Quiz";
     var quizIns = document.createElement("p");
     quizIns.classList.add("text-lable");
     quizIns.textContent = "The following are definations/meanings of words: "
@@ -234,35 +256,33 @@ function generateQuiz(event) {
     
     
     para1.textContent = wordsToTest[index].defs[0]!==undefined? "1. " + wordsToTest[index].defs[0].defSentances[0] :quizLiOne.style.display ="none";
-    para2.textContent = wordsToTest[index].defs[1]!==undefined? "2. " + wordsToTest[index].defs[1].defSentances[1]:quizLiTwo.style.display ="none";
-    para3.textContent = wordsToTest[index].defs[2]!==undefined? "3. " + wordsToTest[index].defs[2].defSentances[2]:quizLiThree.style.display ="none";
+    para2.textContent = wordsToTest[index].defs[1]!==undefined? "2. " + wordsToTest[index].defs[1].defSentances[0]:quizLiTwo.style.display ="none";
+    para3.textContent = wordsToTest[index].defs[2]!==undefined? "3. " + wordsToTest[index].defs[2].defSentances[0]:quizLiThree.style.display ="none";
     correctAnswer =wordsToTest[index].word;
     quizLiOne.appendChild(para1);
     quizLiTwo.appendChild(para2);
     quizLiThree.appendChild(para3);
     quizUl.appendChild(quizLiOne);
-    quizUl.appendChild(document.querySelector("br"));
+   // quizUl.appendChild(document.querySelector("br"));
     quizUl.appendChild(quizLiTwo);
-    quizUl.appendChild(document.querySelector("br"));
+    //quizUl.appendChild(document.querySelector("br"));
     quizUl.appendChild(quizLiThree);
-    quizUl.appendChild(document.querySelector("br"));
+    //quizUl.appendChild(document.querySelector("br"));
     var labelTextbox = document.createElement("p");
     labelTextbox.classList.add("text-lable");
     labelTextbox.textContent = "Guess the word"
-    var textbox = document.createElement("INPUT");
-    textbox.setAttribute("type", "text");
     textbox.classList.add("text-box-guess");
     var button = document.createElement("button");
     button.classList.add("btn");
     button.classList.add("btn-primary");
     button.classList.add("quiz-button");
     button.textContent = "Next"
+    button.addEventListener("click",onNext);
     var buttonLeave = document.createElement("button");
     buttonLeave.classList.add("btn");
     buttonLeave.classList.add("btn-danger");
     buttonLeave.classList.add("quiz-button");
     buttonLeave.textContent = "Exit Quiz";
-    
     var textboxDiv =document.createElement("div");
     textboxDiv.classList.add("quiz-align");
     var buttonDiv=document.createElement("div");
@@ -272,13 +292,16 @@ function generateQuiz(event) {
     textboxDiv.appendChild(textbox);
     buttonDiv.appendChild(button);
     buttonLeaveDiv.appendChild(buttonLeave);
+    quizCardItem.appendChild(quizTitle);
+    quizCardItem.appendChild(time);
     quizCardItem.appendChild(quizIns);
     quizCardItem.appendChild(quizUl);
     quizCardItem.appendChild(labelTextbox);
     quizCardItem.appendChild(textboxDiv);
+    quizCardItem.appendChild(answerPara);
     quizCardItem.appendChild(buttonDiv);
     quizCardItem.appendChild(buttonLeaveDiv);
-
+    quizCardId.appendChild(quizCardItem);
     starTimer();
 
 }
@@ -297,13 +320,13 @@ function starTimer() {
 
 
 
-
-        timeEl.textContent = timecountdown;
-
+        time.style.color='blue';
+        time.innerHTML = "<br/>Time: "+ timecountdown;
+        
         if (timecountdown === 0) {
-            ShowScore();
-            clearArea();
-            //clearInterval(timeInterval);
+            prompt("TIME UP !!");
+            showScore();
+          
         }
     }, 1000);
 }
@@ -340,30 +363,82 @@ function addWordsToLocalStorage() {
 
         Def.add(searchedWords);
         localStorage.setItem(key, JSON.stringify([...Def]));
-
+    }
         //location.reload();
 
 
-    }
+}
 
 
-    /*
+
+
+ /*
 #########################################################
-Function name : addWordsToLocalStorage()
+Function name : onNext()
 Description
-- Create a list of searched words in localStorage
-Developer Name : Shanthoshkanna (y.shanthosh@gmail.com)
+- Logic for next button
 #########################################################
 */
 
 function onNext(){
 
+    
     index= index+1;
-    // document.getElementsByClassName("");
+    //console.log(textbox.value);
 
+    if(textbox.value==correctAnswer){
+        answerPara.textContent ="Correct";
+        answerPara.style.textAlign = "center";
+    }else{
+        answerPara.textContent ="Wrong";
+        answerPara.style.textAlign = "center";
+    }
+
+   
+  
+    setTimeout(() => {   
+         $(quizCardItem).empty();
+         generateQuiz();
+      
+    },1000);
+   
+
+
+}
+
+/*
+#########################################################
+Function name : ShowScore()
+Description
+- Logic to see score
+#########################################################
+*/
+    
+function showScore(){
+    $(quizCardItem).empty();
+    clearInterval(timeInterval);
+     var showScoreTitle= document.createElement("h3");
+     var score = document.createElement("p");
+     var buttonDiv=document.createElement("div");
+     var ins = document.createElement("p");
+     ins.classList.add("quiz-align");
+     ins.innerHTML ="<br/>"+"Click here go to home page"
+     buttonDiv.classList.add("quiz-align");
+     var buttonHome = document.createElement("button");
+     buttonHome.classList.add("btn");
+     buttonHome.classList.add("btn-primary");
+     buttonHome.classList.add("quiz-button");
+     buttonHome.textContent = "Home Page"
+     buttonDiv.appendChild(buttonHome);
+     score.classList.add('quiz-align');
+     showScoreTitle.textContent="YOUR SCORE IS: ";
+     score.innerHTML="<br/>"+timecountdown;
+     quizCardItem.appendChild(showScoreTitle);
+     quizCardItem.appendChild(score);
+     quizCardItem.appendChild(ins);
+     quizCardItem.appendChild(buttonDiv);
 }
 
 
 
 
-}
