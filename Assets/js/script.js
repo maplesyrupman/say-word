@@ -166,7 +166,7 @@ appContainer.appendChild(domOps.createDefCard(testDefObj));
 // Storage Module
 
 const storage = (() => {
-  const addWords = () => {
+  const addWord = () => {
     var searchedWord = dictionary.getWords();
     const key = "addedWords";
     var addedWords = JSON.parse(localStorage.getItem("addedWords")) || [];
@@ -189,7 +189,7 @@ const storage = (() => {
   };
 
   return {
-    addWordToLocalStorage,
+    addWord,
   };
 })();
 
