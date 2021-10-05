@@ -27,14 +27,14 @@
   <body>
     <nav class="navbar navbar-light bg-dark">
       <div class="container-fluid">
-        <a class="navbar-brand">Say Word</a>
+        <div class="title">Say Word</div>
 
         <form class="d-flex">
           <button class="btn btn-sm btn-outline-secondary me-3" type="button">
-            Review
+            Review Words
           </button>
-          <button class="btn btn-sm btn-outline-secondary me-5" type="button" onclick=" getQuizCard()">
-            Quiz
+          <button id ="btn-strt-quiz" class="btn btn-sm btn-outline-secondary me-5" type="button" onclick="getQuizCard(event)">
+            Start Quiz
           </button>
           <input
             class="form-control me-2"
@@ -42,7 +42,7 @@
             placeholder="Search"
             aria-label="Search"
           />
-          <button class="btn btn-outline-success" type="submit">Search</button>
+          <button class="btn btn-outline-success me-7" type="submit" >Search</button>
         </form>
       </div>
     </nav>
@@ -55,10 +55,9 @@
    </div>
 
     
-        <div class="quiz-flex-container">
-            <div class="quiz-flex-item one">
-                <h3>Quiz</h3>
-                <h5>Time: <span id="cnt"></span></h5>
+        <div class="quiz-flex-container" id="quiz-flex-container-id">
+            <div class="quiz-flex-item one" id="quiz-flex-item">
+                
             </div>
         </div>
         
