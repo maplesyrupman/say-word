@@ -198,33 +198,27 @@ const storage = (() => {
   };
 })();
 
-
-// Quiz card module
-
 // Quiz card Module
 
 const quizcard = (() => {
   var timecountdown = 90;
   var timeInterval;
-  var landingPage = document.getElementsByClassName("landing-flex-container");
-  var quizCard = document.getElementsByClassName("quiz-flex-container");
+  var landingPage = document.getElementsByClassName("card-body");
   var para1 = document.createElement("p");
   var para2 = document.createElement("p");
   var para3 = document.createElement("p");
-  //Time
   var time = document.createElement("h3");
   var quizCardId = document.querySelector("#quiz-flex-container-id");
   var quizCardItem = document.querySelector("#quiz-flex-item");
-  //Intial index
   var index = 0;
   var correctAnswer = "";
   var answerPara = document.createElement("p");
   var textbox = document.createElement("INPUT");
-  // Start Quiz button event listener
+  var card = document.createElement('div');
+  var cardBody = document.createElement('div');
 
   const getQuizCard = () => {
     //console.log(index);
-    // Removing landing page element
     landingPage[0].style.display = "none";
 
     if (this.listOfTestObject.length < 3) {
@@ -232,8 +226,6 @@ const quizcard = (() => {
         "Please add more words to take quiz.To memorize minimum 3 words should be added."
       );
     } else {
-      // card style
-      quizCard[0].style.display = "flex";
       generateQuiz();
     }
   };
@@ -275,6 +267,8 @@ const quizcard = (() => {
 
     console.log(wordsToTest);
 
+    card.classList = 'card quiz-card';
+    cardBody.classList.add('card-body');
     quizTitle = document.createElement("h3");
     quizTitle.textContent = "Quiz";
     var quizIns = document.createElement("p");
@@ -311,11 +305,8 @@ const quizcard = (() => {
     quizLiTwo.appendChild(para2);
     quizLiThree.appendChild(para3);
     quizUl.appendChild(quizLiOne);
-    // quizUl.appendChild(document.querySelector("br"));
-    quizUl.appendChild(quizLiTwo);
-    //quizUl.appendChild(document.querySelector("br"));
+    quizUl.appendChild(quizLiTwo)
     quizUl.appendChild(quizLiThree);
-    //quizUl.appendChild(document.querySelector("br"));
     var labelTextbox = document.createElement("p");
     labelTextbox.classList.add("text-lable");
     labelTextbox.textContent = "Guess the word";
@@ -342,16 +333,17 @@ const quizcard = (() => {
     textboxDiv.appendChild(textbox);
     buttonDiv.appendChild(button);
     buttonLeaveDiv.appendChild(buttonLeave);
-    quizCardItem.appendChild(quizTitle);
-    quizCardItem.appendChild(time);
-    quizCardItem.appendChild(quizIns);
-    quizCardItem.appendChild(quizUl);
-    quizCardItem.appendChild(labelTextbox);
-    quizCardItem.appendChild(textboxDiv);
-    quizCardItem.appendChild(answerPara);
-    quizCardItem.appendChild(buttonDiv);
-    quizCardItem.appendChild(buttonLeaveDiv);
-    quizCardId.appendChild(quizCardItem);
+    cardBody.appendChild(quizTitle);
+    cardBody.appendChild(time);
+    cardBody.appendChild(quizIns);
+    cardBody.appendChild(quizUl);
+    cardBody.appendChild(labelTextbox);
+    cardBody.appendChild(textboxDiv);
+    cardBody.appendChild(answerPara);
+    cardBody.appendChild(buttonDiv);
+    cardBody.appendChild(buttonLeaveDiv);
+    card.appendChild(cardBody);
+    appContainer.appendChild(card);
     starTimer();
   };
 
@@ -382,7 +374,7 @@ const quizcard = (() => {
     }
 
     setTimeout(() => {
-      $(quizCardItem).empty();
+      $(cardBody).empty();
       generateQuiz();
     }, 1000);
   };
@@ -390,7 +382,7 @@ const quizcard = (() => {
   const showScore = () => {
     console.log(timeInterval);
     clearInterval(timeInterval);
-    $(quizCardItem).empty();
+    $(cardBody).empty();
     var showScoreTitle = document.createElement("h3");
     var score = document.createElement("p");
     var buttonDiv = document.createElement("div");
@@ -408,17 +400,17 @@ const quizcard = (() => {
     score.classList.add("quiz-align");
     showScoreTitle.textContent = "YOUR SCORE IS: ";
     score.innerHTML = "<br/>" + timecountdown;
-    quizCardItem.appendChild(showScoreTitle);
-    quizCardItem.appendChild(score);
-    quizCardItem.appendChild(ins);
-    quizCardItem.appendChild(buttonDiv);
+    cardBody.appendChild(showScoreTitle);
+    cardBody.appendChild(score);
+    cardBody.appendChild(ins);
+    cardBody.appendChild(buttonDiv);
   };
 
   const goToHome = () => {
     console.log(timeInterval);
     clearInterval(timeInterval);
-    quizCard[0].style.display = "none";
-    landingPage[0].style.display = "flex";
+    card.style.display = "none";
+    landingPage[0].style.display = "block";
     document.getElementById("btn-strt-quiz").disabled = false;
   };
 
