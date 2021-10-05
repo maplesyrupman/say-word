@@ -166,7 +166,7 @@ appContainer.appendChild(domOps.createDefCard(testDefObj));
 // Storage Module
 
 const storage = (() => {
-  const addWordToLocalStorage = () => {
+  const addWords = () => {
     var searchedWord = dictionary.getWords();
     const key = "addedWords";
     var addedWords = JSON.parse(localStorage.getItem("addedWords")) || [];
