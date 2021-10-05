@@ -231,7 +231,7 @@ const quizcard = (() => {
   const generateQuiz = () => {
     console.log(index);
     if(index==0){
-      timecountdown=31;
+      timecountdown=91;
       timeInterval = setInterval(function () {
         timecountdown--;
     
@@ -420,6 +420,7 @@ const quizcard = (() => {
   };
 
   const goToHome = () => {
+   
     clearInterval(timeInterval);
     card.style.display = "none";
     landingPage[0].style.display = "block";
