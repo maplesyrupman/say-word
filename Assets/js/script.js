@@ -168,15 +168,11 @@ appContainer.appendChild(domOps.createDefCard(testDefObj));
 const storage = (() => {
   const addWordToLocalStorage = () => {
     var searchedWord = dictionary.getWords();
-    // Key for local storage
     const key = "addedWords";
-    // value in localStorage
     var addedWords = JSON.parse(localStorage.getItem("addedWords")) || [];
-    // Prompt to confirm adding words
     var confirmBox = confirm("Do You Want To Add This To Your List?");
     if (confirmBox) {
       if (addedWords.length > 0) {
-        // check if word is already in local storage
         const listOfStoredWords = addedWords.map(function (wordObj) {
           const wordFromList = Object.keys(wordObj)[0];
           return wordFromList;
@@ -186,7 +182,6 @@ const storage = (() => {
           return location.reload(); // Fix for now until search is fixed
         }
       }
-      // Add word to local storage
       addedWords.push(searchedWord);
       localStorage.setItem(key, JSON.stringify(addedWords));
     }
@@ -201,15 +196,14 @@ const storage = (() => {
 // Quiz card Module
 
 const quizcard = (() => {
-  var timecountdown = 90;
+
+  var timecountdown;
   var timeInterval;
   var landingPage = document.getElementsByClassName("card-body");
   var para1 = document.createElement("p");
   var para2 = document.createElement("p");
   var para3 = document.createElement("p");
   var time = document.createElement("h3");
-  var quizCardId = document.querySelector("#quiz-flex-container-id");
-  var quizCardItem = document.querySelector("#quiz-flex-item");
   var index = 0;
   var correctAnswer = "";
   var answerPara = document.createElement("p");
@@ -226,13 +220,14 @@ const quizcard = (() => {
         "Please add more words to take quiz.To memorize minimum 3 words should be added."
       );
     } else {
+      card.style.display = "block";
       generateQuiz();
     }
   };
 
   const generateQuiz = () => {
-    console.log(index);
-
+    //console.log(index);
+    timecountdown=10;
     if (index == 3) {
       showScore();
       return;
@@ -353,19 +348,26 @@ const quizcard = (() => {
 
       time.style.color = "blue";
       time.innerHTML = "<br/>Time: " + timecountdown;
-      console.log(1);
       if (timecountdown === 0) {
-        alert("TIME UP !!");
+     
         showScore();
       }
     }, 1000);
   };
 
   const onNext = () => {
-    index = index + 1;
+   
     //console.log(textbox.value);
 
-    if (textbox.value == correctAnswer) {
+    var answer=textbox.value;
+
+    if(textbox.value==""){
+      alert("Answer cannot be empty");
+      return;
+    }
+    index = index + 1;
+
+    if (answer.toLowerCase() == correctAnswer.toLowerCase()) {
       answerPara.textContent = "Correct";
       answerPara.style.textAlign = "center";
     } else {
@@ -411,6 +413,7 @@ const quizcard = (() => {
     clearInterval(timeInterval);
     card.style.display = "none";
     landingPage[0].style.display = "block";
+    $(cardBody).empty();
     document.getElementById("btn-strt-quiz").disabled = false;
   };
 
