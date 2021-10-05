@@ -41,7 +41,6 @@ let testDefObj = {
 }
 
 var listOfTestObject = [testDefObj, testDefObj, testDefObj, testDefObj, testDefObj];
-console.log(listOfTestObject[0]);
 
 const dictionary = (() => {
   let words = {};
@@ -123,30 +122,67 @@ const dictionary = (() => {
 
 const domOps = (() => {
   const createDefCard = (defObj) => {
-    let word = defObj.word;
-    let definitionCard = document.createElement("div");
-    definitionCard.classList.add("card");
-    let cardBody = document.createElement("div");
-    cardBody.classList.add("card-body");
-    let definitionHeader = document.createElement("div");
-    definitionHeader.textContent = word;
-    let soundButton = document.createElement("button");
-    let saveButton = document.createElement("button");
-    definitionHeader.classList.add("card");
-    saveButton.classList.add("btn-save");
-    soundButton.classList.add("btn-sound");
+    let card = document.createElement('div');
+    card.classList = 'd-inline-block card';
 
-    definitionCard.appendChild(cardBody);
-    cardBody.appendChild(definitionHeader);
-    definitionHeader.appendChild(soundButton, saveButton);
+    let cardBody = document.createElement('div');
+    cardBody.classList.add('card-body');
 
-    return definitionCard;
+    let headingBox = document.createElement('div');
+    headingBox.classList = 'd-flex flex-row justify-content-between';
+    let wordBox = document.createElement('div');
+    wordBox.classList = 'd-flex flex-row';
+    let wordHeading = document.createElement('h2');
+    wordHeading.classList = ('card-title fs-1 mr-2');
+    wordHeading.textContent = defObj.word;
+    let pronounciation = document.createElement('audio');
+    pronounciation.setAttribute('src', defObj.audioUrl);
+    let soundBtn = document.createElement('button');
+    soundBtn.addEventListener('click', () => {
+      pronounciation.play();
+    });
+    soundBtn.classList = 'btn btn-secondary sound-btn';
+    soundBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+    wordBox.appendChild(wordHeading);
+    wordBox.appendChild(soundBtn);
+    let saveBtn = document.createElement('button');
+    saveBtn.classList = 'btn btn-primary btn-sm save-btn';
+    saveBtn.textContent = 'Save Word';
+    headingBox.appendChild(wordBox);
+    headingBox.appendChild(saveBtn);
+    cardBody.appendChild(headingBox);
+
+    for (let i=0; i< defObj.defs.length; i++) {
+      cardBody.appendChild(createDefEntry(defObj.defs[i], defObj.word));
+    }
+
+    card.appendChild(cardBody);
+    return card;    
   };
+
+  const createDefEntry = (defEntry, word) => {
+    let entryBox = document.createElement('div');
+    entryBox.classList = 'mt-5';
+    let entryHeading = document.createElement('h4');
+    entryHeading.innerHTML = `${word} <span class='fs-5 text-muted'>${defEntry.fl}</span>`;
+    entryHeading.classList = 'fs-3';
+    entryBox.appendChild(entryHeading);
+    for (let i=0; i < defEntry.defSentances.length; i++) {
+      let defSentance = document.createElement('p');
+      defSentance.classList = 'px-3';
+      defSentance.textContent = `${i+1}. ${defEntry.defSentances[i]}`;
+      entryBox.appendChild(defSentance);
+    }
+    return entryBox;
+  }
 
   return {
     createDefCard,
   };
 })();
+
+const appContainer = document.getElementById('app-container');
+appContainer.appendChild(domOps.createDefCard(testDefObj));
 
 const storage = (() => {
   let sayhi = function () {
