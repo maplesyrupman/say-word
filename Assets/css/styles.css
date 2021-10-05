@@ -1,9 +1,18 @@
-.app-container {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+#app-container {
+  height: 94vh;
+  overflow: auto;
 }
+
+.sound-btn{
+  height: 50px;
+  width: 50px;
+  border-radius: 50px;
+}
+
+.save-btn {
+  height: 2.5rem;
+}
+
 
 .title{
   color:white;
@@ -138,6 +147,7 @@
 }
 h5 {
   text-align: center;
+  margin-top: 25px;
 }
 .modal-body {
   display: flex;
@@ -150,10 +160,6 @@ h5 {
 
 .list-group-item{
   width: 93%;
-}
-
-h5{
-  margin-top: 25px;
 }
 
 .text-box-guess{
@@ -183,6 +189,10 @@ li{
 }
 
 
+/* --- start of def card styles --- */
 
+
+
+/* --- end of def card styles --- */
 
 

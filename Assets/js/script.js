@@ -1,34 +1,25 @@
 let testDefObj = {
-  word: "interest",
-  audioUrl:
-    "https://media.merriam-webster.com/audio/prons/en/us/mp3/i/intere01.mp3",
-  defs: [
-    {
-      fl: "noun",
-      defSentances: [
-        "a feeling that accompanies or causes special attention to something or someone : concern",
-        "something or someone that arouses such attention",
-        "a quality in a thing or person arousing interest",
-      ],
-    },
-    {
-      fl: "adjective",
-      defSentances: [
-        "to engage the attention or arouse the interest of",
-        "to induce or persuade to participate or engage",
-      ],
-    },
-  ],
-};
+    word: 'interest',
+    audioUrl: 'https://media.merriam-webster.com/audio/prons/en/us/mp3/i/intere01.mp3',
+    defs: [{
+            fl: 'noun',
+            defSentances: [
+                "a feeling that accompanies or causes special attention to something or someone : concern",
+                "something or someone that arouses such attention",
+                "a quality in a thing or person arousing interest"
+            ]
+        },
+        {
+            fl: 'adjective',
+            defSentances: [
+                "to engage the attention or arouse the interest of",
+                "to induce or persuade to participate or engage"
+            ]
+        }
+    ]
+}
 
-var listOfTestObject = [
-  testDefObj,
-  testDefObj,
-  testDefObj,
-  testDefObj,
-  testDefObj,
-];
-console.log(listOfTestObject[0]);
+var listOfTestObject = [testDefObj, testDefObj, testDefObj, testDefObj, testDefObj];
 
 const dictionary = (() => {
   let words = {};
@@ -36,26 +27,27 @@ const dictionary = (() => {
   const getDef = (word) => {
     let apiUrl = `https://dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=eef68214-e15e-46fc-8e3b-5c0c4330f2db`;
 
-    fetch(apiUrl).then((response) => {
-      if (response.ok) {
-        response.json().then((data) => {
-          words[word] = createDefObj(data, word);
-        });
-      }
-    });
-  };
+        fetch(apiUrl).then(response => {
+            if (response.ok) {
+                response.json().then(data => {
 
-  const getAntSyn = (word) => {
-    let apiUrl = `https://dictionaryapi.com/api/v3/references/thesaurus/json/${word}?key=15205c99-2cb8-498d-a9f9-f5bdc4865029`;
+                    words[word] = createDefObj(data, word);
+                });
+            }
+        })
+    }
 
-    fetch(apiUrl).then((response) => {
-      if (response.ok) {
-        response.json().then((data) => {
-          console.log(data);
+    const getAntSyn = word => {
+        let apiUrl = `https://dictionaryapi.com/api/v3/references/thesaurus/json/${word}?key=15205c99-2cb8-498d-a9f9-f5bdc4865029`;
+
+        fetch(apiUrl).then(response => {
+            if (response.ok) {
+                response.json().then(data => {
+                    console.log(data)
+                });
+            }
         });
-      }
-    });
-  };
+      };
 
   const stripAstr = (word) => {
     let strippedArr = word.split("*");
@@ -104,18 +96,72 @@ const dictionary = (() => {
     stripAstr,
     getAudioUrl,
     getWords,
-  };
+  }
 })();
 
 const domOps = (() => {
   const createDefCard = (defObj) => {
-    let definitionCard = document.createElement("div");
+    let card = document.createElement('div');
+    card.classList = 'd-inline-block card';
+
+    let cardBody = document.createElement('div');
+    cardBody.classList.add('card-body');
+
+    let headingBox = document.createElement('div');
+    headingBox.classList = 'd-flex flex-row justify-content-between';
+    let wordBox = document.createElement('div');
+    wordBox.classList = 'd-flex flex-row';
+    let wordHeading = document.createElement('h2');
+    wordHeading.classList = ('card-title fs-1 mr-2');
+    wordHeading.textContent = defObj.word;
+    let pronounciation = document.createElement('audio');
+    pronounciation.setAttribute('src', defObj.audioUrl);
+    let soundBtn = document.createElement('button');
+    soundBtn.addEventListener('click', () => {
+      pronounciation.play();
+    });
+    soundBtn.classList = 'btn btn-secondary sound-btn';
+    soundBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+    wordBox.appendChild(wordHeading);
+    wordBox.appendChild(soundBtn);
+    let saveBtn = document.createElement('button');
+    saveBtn.classList = 'btn btn-primary btn-sm save-btn';
+    saveBtn.textContent = 'Save Word';
+    headingBox.appendChild(wordBox);
+    headingBox.appendChild(saveBtn);
+    cardBody.appendChild(headingBox);
+
+    for (let i=0; i< defObj.defs.length; i++) {
+      cardBody.appendChild(createDefEntry(defObj.defs[i], defObj.word));
+    }
+
+    card.appendChild(cardBody);
+    return card;    
   };
+
+  const createDefEntry = (defEntry, word) => {
+    let entryBox = document.createElement('div');
+    entryBox.classList = 'mt-5';
+    let entryHeading = document.createElement('h4');
+    entryHeading.innerHTML = `${word} <span class='fs-5 text-muted'>${defEntry.fl}</span>`;
+    entryHeading.classList = 'fs-3';
+    entryBox.appendChild(entryHeading);
+    for (let i=0; i < defEntry.defSentances.length; i++) {
+      let defSentance = document.createElement('p');
+      defSentance.classList = 'px-3';
+      defSentance.textContent = `${i+1}. ${defEntry.defSentances[i]}`;
+      entryBox.appendChild(defSentance);
+    }
+    return entryBox;
+  }
 
   return {
     createDefCard,
   };
 })();
+
+const appContainer = document.getElementById('app-container');
+appContainer.appendChild(domOps.createDefCard(testDefObj));
 
 // Storage Module
 
@@ -152,43 +198,11 @@ const storage = (() => {
   };
 })();
 
-// Quiz card Module
 
-const quizcard = (() => {
-  var timecountdown = 90;
-  var timeInterval;
-  var landingPage = document.getElementsByClassName("landing-flex-container");
-  var quizCard = document.getElementsByClassName("quiz-flex-container");
-  var para1 = document.createElement("p");
-  var para2 = document.createElement("p");
-  var para3 = document.createElement("p");
-  //Time
-  var time = document.createElement("h3");
-  var quizCardId = document.querySelector("#quiz-flex-container-id");
-  var quizCardItem = document.querySelector("#quiz-flex-item");
-  //Intial index
-  var index = 0;
-  var correctAnswer = "";
-  var answerPara = document.createElement("p");
-  var textbox = document.createElement("INPUT");
-  // Start Quiz button event listener
+// Quiz card module
 
-  const getQuizCard = () => {
-    //console.log(index);
-    // Removing landing page element
-    landingPage[0].style.display = "none";
-
-    if (this.listOfTestObject.length < 3) {
-      prompt(
-        "Please add more words to take quiz.To memorize minimum 3 words should be added."
-      );
-    } else {
-      // card style
-      quizCard[0].style.display = "flex";
-      generateQuiz();
-    }
-  };
-
+const getQuizCard = () => {
+    
   const generateQuiz = () => {
     console.log(index);
 
@@ -262,11 +276,8 @@ const quizcard = (() => {
     quizLiTwo.appendChild(para2);
     quizLiThree.appendChild(para3);
     quizUl.appendChild(quizLiOne);
-    // quizUl.appendChild(document.querySelector("br"));
     quizUl.appendChild(quizLiTwo);
-    //quizUl.appendChild(document.querySelector("br"));
     quizUl.appendChild(quizLiThree);
-    //quizUl.appendChild(document.querySelector("br"));
     var labelTextbox = document.createElement("p");
     labelTextbox.classList.add("text-lable");
     labelTextbox.textContent = "Guess the word";
@@ -330,9 +341,9 @@ const quizcard = (() => {
     } else {
       answerPara.textContent = "Wrong";
       answerPara.style.textAlign = "center";
-    }
+  }
 
-    setTimeout(() => {
+  setTimeout(() => {
       $(quizCardItem).empty();
       generateQuiz();
     }, 1000);
@@ -381,7 +392,8 @@ const quizcard = (() => {
     showScore,
     goToHome,
   };
-})();
+
+}
 
 var quizStartButton = document.getElementById("btn-strt-quiz");
 quizStartButton.addEventListener("click", quizcard.getQuizCard);
