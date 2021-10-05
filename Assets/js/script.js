@@ -44,11 +44,10 @@ var listOfTestObject = [testDefObj, testDefObj, testDefObj, testDefObj, testDefO
 console.log(listOfTestObject[0]);
 
 const dictionary = (() => {
+  let words = {};
 
-    let words = {};
-
-    const getDef = word => {
-        let apiUrl = `https://dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=eef68214-e15e-46fc-8e3b-5c0c4330f2db`;
+  const getDef = (word) => {
+    let apiUrl = `https://dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=eef68214-e15e-46fc-8e3b-5c0c4330f2db`;
 
         fetch(apiUrl).then(response => {
             if (response.ok) {
@@ -70,75 +69,93 @@ const dictionary = (() => {
                 });
             }
         });
-    }
+      };
 
-    const stripAstr = word => {
-        let strippedArr = word.split('*');
-        return strippedArr.join('');
-    }
+  const stripAstr = (word) => {
+    let strippedArr = word.split("*");
+    return strippedArr.join("");
+  };
 
-    const createDefObj = (defArr, word) => {
-        let defObj = {
-            word: word,
-            audioUrl: getAudioUrl(defArr),
-            defs: []
+  const createDefObj = (defArr, word) => {
+    let defObj = {
+      word: word,
+      audioUrl: getAudioUrl(defArr),
+      defs: [],
+    };
+    for (let i = 0; i < defArr.length; i++) {
+      let currentDef = defArr[i];
+      if (stripAstr(currentDef.hwi.hw) == word) {
+        let type = {
+          fl: currentDef.fl,
+          defSentances: currentDef.shortdef,
         };
-        for (let i = 0; i < defArr.length; i++) {
-            let currentDef = defArr[i];
-            if (stripAstr(currentDef.hwi.hw) == word) {
-                let type = {
-                    fl: currentDef.fl,
-                    defSentances: currentDef.shortdef
-                };
-                defObj.defs.push(type);
-            } else {
-                break;
-            }
-        }
-        return defObj
+        defObj.defs.push(type);
+      } else {
+        break;
+      }
     }
+    return defObj;
+  };
 
-    const getAudioUrl = defArr => {
-        let baseFilename = defArr[0].hwi.prs[0].sound.audio;
-        let subdirectory = (baseFilename.substr(0, 3) == 'bix') ? 'bix' :
-            (baseFilename.substr(0, 3) == 'gg') ? 'gg' :
-            baseFilename[0];
-        return `https://media.merriam-webster.com/audio/prons/en/us/mp3/${subdirectory}/${baseFilename}.mp3`
-    }
+  const getAudioUrl = (defArr) => {
+    let baseFilename = defArr[0].hwi.prs[0].sound.audio;
+    let subdirectory =
+      baseFilename.substr(0, 3) == "bix"
+        ? "bix"
+        : baseFilename.substr(0, 3) == "gg"
+        ? "gg"
+        : baseFilename[0];
+    return `https://media.merriam-webster.com/audio/prons/en/us/mp3/${subdirectory}/${baseFilename}.mp3`;
+  };
 
-    const getWords = () => {
-        return words;
-    }
+  const getWords = () => {
+    return words;
+  };
 
-    return {
-        getDef,
-        getAntSyn,
-        stripAstr,
-        getAudioUrl,
-        getWords
-    }
+  return {
+    getDef,
+    getAntSyn,
+    stripAstr,
+    getAudioUrl,
+    getWords,
+  }
 })();
 
 const domOps = (() => {
-    const createDefCard = (defObj) => {
-        let definitionCard = document.createElement('div');
-    }
+  const createDefCard = (defObj) => {
+    let word = defObj.word;
+    let definitionCard = document.createElement("div");
+    definitionCard.classList.add("card");
+    let cardBody = document.createElement("div");
+    cardBody.classList.add("card-body");
+    let definitionHeader = document.createElement("div");
+    definitionHeader.textContent = word;
+    let soundButton = document.createElement("button");
+    let saveButton = document.createElement("button");
+    definitionHeader.classList.add("card");
+    saveButton.classList.add("btn-save");
+    soundButton.classList.add("btn-sound");
 
-    return {
-        createDefCard,
-    }
+    definitionCard.appendChild(cardBody);
+    cardBody.appendChild(definitionHeader);
+    definitionHeader.appendChild(soundButton, saveButton);
+
+    return definitionCard;
+  };
+
+  return {
+    createDefCard,
+  };
 })();
 
 const storage = (() => {
-
-        let sayhi = function() {
-            console.log('hi');
-        }
-
-        return {
-            sayhi
-        }
-    })()
+  let sayhi = function () {
+    console.log("hi");
+  };
+   return {
+     sayhi
+  }
+})()
 
 /*
 #########################################################
@@ -152,44 +169,33 @@ Description
  #########################################################
 */
 
+function getQuizCard() {
+  // need to put code to remove landing page element
+  landingPage[0].style.display = "none";
 
-
+  if (this.addedWordsToLocalStorage.length < 3) {
+    prompt(
+      "Please add more words to take quiz.To memorize minimum 3 words should be added."
+    );
+  } else {
+    quizCard[0].style.display = "flex";
+    starTimer();
+  }
+}
 
 function getQuizCard() {
-
-    
-
      //console.log(index);
 
     // Removing landing page element
     landingPage[0].style.display = 'none';
 
-
-
     if (this.listOfTestObject.length < 3) {
         prompt("Please add more words to take quiz.To memorize minimum 3 words should be added.");
 
     } else {
-
-        // Card style
-
-       
-        
-        
         quizCard[0].style.display = 'flex';
-       
         generateQuiz();
-
-
-
-
-
-
     }
-
-
-
-
 }
 
 /*
@@ -213,12 +219,9 @@ function generateQuiz() {
     answerPara.textContent="";
     textbox.value="";
 
-    
-    // Card title
     var listOfObject =[];
     var wordsToTest=[];
     var fetchedAddedWordsFromLocalStorage = JSON.parse(localStorage.getItem("addedWords"));
-    
     
     for (var i = 0, length = fetchedAddedWordsFromLocalStorage.length; i < length; i++) {
         for (obj in fetchedAddedWordsFromLocalStorage[i]) {
@@ -238,8 +241,7 @@ function generateQuiz() {
     }
 
       console.log(wordsToTest);
-     
-    
+
     quizTitle=document.createElement("h3");
     quizTitle.textContent = "Quiz";
     var quizIns = document.createElement("p");
@@ -462,6 +464,3 @@ function goToHome(){
     landingPage[0].style.display = 'flex';
     document.getElementById("btn-strt-quiz").disabled = false;
 }
-
-
-
