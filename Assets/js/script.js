@@ -1,3 +1,10 @@
+// DOM Elements
+const appContainer = document.getElementById('app-container');
+const searchBtn = document.getElementById('search-btn');
+const searchField = document.getElementById('search-field');
+
+
+
 let testDefObj = {
     word: 'interest',
     audioUrl: 'https://media.merriam-webster.com/audio/prons/en/us/mp3/i/intere01.mp3',
@@ -30,8 +37,8 @@ const dictionary = (() => {
         fetch(apiUrl).then(response => {
             if (response.ok) {
                 response.json().then(data => {
-
-                    words[word] = createDefObj(data, word);
+                    let defObj = createDefObj(data, word);
+                    appContainer.appendChild(domOps.createDefCard(defObj));
                 });
             }
         })
@@ -86,6 +93,13 @@ const dictionary = (() => {
     return `https://media.merriam-webster.com/audio/prons/en/us/mp3/${subdirectory}/${baseFilename}.mp3`;
   };
 
+  const search = (word) => {
+    let cleanWord = word.toLowerCase().trim();
+    appContainer.textContent = '';
+
+    getDef(cleanWord);
+  }
+
   const getWords = () => {
     return words;
   };
@@ -96,8 +110,16 @@ const dictionary = (() => {
     stripAstr,
     getAudioUrl,
     getWords,
+    search
   }
 })();
+
+searchBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  let searchWord = searchField.value;
+  dictionary.search(searchWord);
+
+})
 
 const domOps = (() => {
   const createDefCard = (defObj) => {
@@ -131,6 +153,10 @@ const domOps = (() => {
     headingBox.appendChild(saveBtn);
     cardBody.appendChild(headingBox);
 
+    saveBtn.addEventListener('click', () => {
+    
+    })
+
     for (let i=0; i< defObj.defs.length; i++) {
       cardBody.appendChild(createDefEntry(defObj.defs[i], defObj.word));
     }
@@ -160,8 +186,6 @@ const domOps = (() => {
   };
 })();
 
-const appContainer = document.getElementById('app-container');
-appContainer.appendChild(domOps.createDefCard(testDefObj));
 
 // Storage Module
 
