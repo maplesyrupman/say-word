@@ -273,37 +273,28 @@ Developer Name : Shanthoshkanna (y.shanthosh@gmail.com)
 */
 
 function addWordsToLocalStorage() {
-    var searchedWords = dictionary.getWords();
-    console.log(searchedWords);
-    const key = "addedWords"; // Key for local storage
-    var Def = new Set(); // Set to avoid duplicates
-    const addedWords = JSON.parse(localStorage.getItem(localStorage.key(0)));
+    var searchedWord = dictionary.getWords();
+    // Key for local storage
+    const key = "addedWords";
+    // value in localStorage
+    var addedWords = JSON.parse(localStorage.getItem('addedWords')) || [];
     // Prompt to confirm adding words
     var confirmBox = confirm("Do You Want To Add This To Your List?");
-
-    // if word already exsists
-    if (confirmBox == true) {
-        if (addedWords != null) {
-            // Work in progress for prompt when duplicate
-            /*if (addedWords.includes(searchedWords)) {
+    if (confirmBox) {
+        if (addedWords.length > 0) {
+            // check if word is already in local storage
+            const listOfStoredWords = addedWords.map(function(wordObj) {
+                const wordFromList = Object.keys(wordObj)[0]
+                return wordFromList
+            })
+            if (listOfStoredWords.includes(Object.keys(searchedWord)[0])) {
                 window.alert("You Have Already Added This Word To Your List");
-                return
-    
-            }*/
-            Def = new Set([...addedWords]); // Sets cannot be saved and retrieved in local storage therefore convert Sets to Arrays while storing.
+                return location.reload(); // Fix for now until search is fixed
+            }
         }
-
-        Def.add(searchedWords);
-        localStorage.setItem(key, JSON.stringify([...Def]));
-
-        //location.reload();
-
-
+        // Add word to local storage
+        addedWords.push(searchedWord);
+        localStorage.setItem(key, JSON.stringify(addedWords));
     }
-
-
-
-
-
-
+    return location.reload(); // Fix for now until search is fixed
 }
