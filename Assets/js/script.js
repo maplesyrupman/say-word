@@ -210,6 +210,7 @@ const quizcard = (() => {
   var textbox = document.createElement("INPUT");
   var card = document.createElement('div');
   var cardBody = document.createElement('div');
+  
 
   const getQuizCard = () => {
     //console.log(index);
@@ -220,15 +221,34 @@ const quizcard = (() => {
         "Please add more words to take quiz.To memorize minimum 3 words should be added."
       );
     } else {
+      $(cardBody).empty();
       card.style.display = "block";
+      index=0;
       generateQuiz();
     }
   };
 
   const generateQuiz = () => {
-    //console.log(index);
-    timecountdown=10;
+    console.log(index);
+    if(index==0){
+      timecountdown=31;
+      timeInterval = setInterval(function () {
+        timecountdown--;
+    
+        time.style.color = "blue";
+        time.innerHTML = "<br/>Time: " + timecountdown;
+        console.log(1);
+        if (timecountdown === 0) {
+          console.log("Times up !!")
+          showScore();
+          clearInterval(timeInterval);
+         
+        }
+      }, 1000);
+    }
+    
     if (index == 3) {
+      console.log("Quiz Done");
       showScore();
       return;
     }
@@ -339,20 +359,11 @@ const quizcard = (() => {
     cardBody.appendChild(buttonLeaveDiv);
     card.appendChild(cardBody);
     appContainer.appendChild(card);
-    starTimer();
+    //starTimer();
   };
 
   const starTimer = () => {
-    timeInterval = setInterval(function () {
-      timecountdown--;
-
-      time.style.color = "blue";
-      time.innerHTML = "<br/>Time: " + timecountdown;
-      if (timecountdown === 0) {
-     
-        showScore();
-      }
-    }, 1000);
+   
   };
 
   const onNext = () => {
@@ -382,7 +393,7 @@ const quizcard = (() => {
   };
 
   const showScore = () => {
-    console.log(timeInterval);
+    console.log("Time ID:" +timeInterval);
     clearInterval(timeInterval);
     $(cardBody).empty();
     var showScoreTitle = document.createElement("h3");
@@ -409,7 +420,6 @@ const quizcard = (() => {
   };
 
   const goToHome = () => {
-    console.log(timeInterval);
     clearInterval(timeInterval);
     card.style.display = "none";
     landingPage[0].style.display = "block";
