@@ -104,12 +104,17 @@ const dictionary = (() => {
     return words;
   };
 
+  const addDef = (defObj) => {
+    words[defObj.word] = defObj;
+  }
+
   return {
     getDef,
     getAntSyn,
     stripAstr,
     getAudioUrl,
     getWords,
+    addDef,
     search
   }
 })();
@@ -154,7 +159,8 @@ const domOps = (() => {
     cardBody.appendChild(headingBox);
 
     saveBtn.addEventListener('click', () => {
-    
+      dictionary.addDef(defObj);
+      storage.addWord();
     })
 
     for (let i=0; i< defObj.defs.length; i++) {
@@ -203,13 +209,13 @@ const storage = (() => {
         });
         if (listOfStoredWords.includes(Object.keys(searchedWord)[0])) {
           window.alert("You Have Already Added This Word To Your List");
-          return location.reload(); // Fix for now until search is fixed
+          return 
         }
       }
       addedWords.push(searchedWord);
       localStorage.setItem(key, JSON.stringify(addedWords));
     }
-    return location.reload(); // Fix for now until search is fixed
+    return 
   };
 
   return {
