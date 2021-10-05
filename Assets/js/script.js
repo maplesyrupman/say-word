@@ -201,8 +201,43 @@ const storage = (() => {
 
 // Quiz card module
 
-const getQuizCard = () => {
-    
+// Quiz card Module
+
+const quizcard = (() => {
+  var timecountdown = 90;
+  var timeInterval;
+  var landingPage = document.getElementsByClassName("landing-flex-container");
+  var quizCard = document.getElementsByClassName("quiz-flex-container");
+  var para1 = document.createElement("p");
+  var para2 = document.createElement("p");
+  var para3 = document.createElement("p");
+  //Time
+  var time = document.createElement("h3");
+  var quizCardId = document.querySelector("#quiz-flex-container-id");
+  var quizCardItem = document.querySelector("#quiz-flex-item");
+  //Intial index
+  var index = 0;
+  var correctAnswer = "";
+  var answerPara = document.createElement("p");
+  var textbox = document.createElement("INPUT");
+  // Start Quiz button event listener
+
+  const getQuizCard = () => {
+    //console.log(index);
+    // Removing landing page element
+    landingPage[0].style.display = "none";
+
+    if (this.listOfTestObject.length < 3) {
+      prompt(
+        "Please add more words to take quiz.To memorize minimum 3 words should be added."
+      );
+    } else {
+      // card style
+      quizCard[0].style.display = "flex";
+      generateQuiz();
+    }
+  };
+
   const generateQuiz = () => {
     console.log(index);
 
@@ -276,8 +311,11 @@ const getQuizCard = () => {
     quizLiTwo.appendChild(para2);
     quizLiThree.appendChild(para3);
     quizUl.appendChild(quizLiOne);
+    // quizUl.appendChild(document.querySelector("br"));
     quizUl.appendChild(quizLiTwo);
+    //quizUl.appendChild(document.querySelector("br"));
     quizUl.appendChild(quizLiThree);
+    //quizUl.appendChild(document.querySelector("br"));
     var labelTextbox = document.createElement("p");
     labelTextbox.classList.add("text-lable");
     labelTextbox.textContent = "Guess the word";
@@ -341,9 +379,9 @@ const getQuizCard = () => {
     } else {
       answerPara.textContent = "Wrong";
       answerPara.style.textAlign = "center";
-  }
+    }
 
-  setTimeout(() => {
+    setTimeout(() => {
       $(quizCardItem).empty();
       generateQuiz();
     }, 1000);
@@ -392,8 +430,7 @@ const getQuizCard = () => {
     showScore,
     goToHome,
   };
-
-}
+})();
 
 var quizStartButton = document.getElementById("btn-strt-quiz");
 quizStartButton.addEventListener("click", quizcard.getQuizCard);
