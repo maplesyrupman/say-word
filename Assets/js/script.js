@@ -186,15 +186,12 @@ const domOps = (() => {
   const createReviewCard = (defObjs) => {
     let reviewCard = document.createElement('div');
     reviewCard.classList = "d-flex flex-column";
-    reviewCard.appendChild(createDefCard(testDefObj));
-
-    //display all the words saved as definition cards.
-    //use the for loop to iterate over the defObjs's keys.
-    //Pass the values of each definition keys to the createDefCard.
-  
-  
-
-
+    let keys = Object.keys(defObjs);
+    for (let i = 0; i < keys.length; i++) {
+      let currentKey = keys[i];
+      let currentDefObj = defObjs[currentKey];
+      reviewCard.appendChild(domOps.createDefCard(currentDefObj));
+    }
     return reviewCard;
   }
   return {
