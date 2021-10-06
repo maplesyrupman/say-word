@@ -1,7 +1,20 @@
+/* body {
+  max-height: 100vh;
+} */
+
 #app-container {
-  height: 94vh;
-  overflow: auto;
   padding: 5% 0;
+  overflow: auto;
+}
+
+#nav {
+  position: sticky;
+  top: 0px;
+}
+
+.container {
+  height: 94vh;
+  /* max-height: 94vh; */
   overflow: auto;
 }
 
@@ -16,7 +29,7 @@
 }
 
 .defCardClass {
-  width: 40%;
+  width: 70%;
 }
 
 .title {
