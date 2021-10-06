@@ -129,7 +129,7 @@ searchBtn.addEventListener('click', (e) => {
 const domOps = (() => {
   const createDefCard = (defObj) => {
     let card = document.createElement('div');
-    card.classList = 'd-inline-block card';
+    card.classList = 'd-inline-block card defCardClass';
 
     let cardBody = document.createElement('div');
     cardBody.classList.add('card-body');

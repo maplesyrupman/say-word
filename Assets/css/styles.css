@@ -1,6 +1,8 @@
 #app-container {
   height: 94vh;
   overflow: auto;
+  padding: 5% 0;
+  overflow: auto;
 }
 
 .sound-btn {
@@ -11,6 +13,10 @@
 
 .save-btn {
   height: 2.5rem;
+}
+
+.defCardClass {
+  width: 40%;
 }
 
 .title {
