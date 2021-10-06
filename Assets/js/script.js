@@ -26,6 +26,13 @@ let testDefObj = {
     ]
 }
 
+var testDefObjs = {
+  interest1: testDefObj,
+  interest2: testDefObj,
+  interest3: testDefObj,
+  interest4: testDefObj,
+  interest5: testDefObj,
+}
 var listOfTestObject = [testDefObj, testDefObj, testDefObj, testDefObj, testDefObj];
 
 const dictionary = (() => {
@@ -36,6 +43,7 @@ const dictionary = (() => {
 
         fetch(apiUrl).then(response => {
             if (response.ok) {
+              console.log(response);
                 response.json().then(data => {
                     let defObj = createDefObj(data, word);
                     appContainer.appendChild(domOps.createDefCard(defObj));
@@ -118,7 +126,7 @@ searchBtn.addEventListener('click', (e) => {
 const domOps = (() => {
   const createDefCard = (defObj) => {
     let card = document.createElement('div');
-    card.classList = 'd-inline-block card defCardClass';
+    card.classList = 'd-inline-block card defCardClass mt-5';
 
     let cardBody = document.createElement('div');
     cardBody.classList.add('card-body');
@@ -176,9 +184,21 @@ const domOps = (() => {
     }
     return entryBox;
   }
-
+  
+  const createReviewCard = (defObjs) => {
+    let reviewCard = document.createElement('div');
+    reviewCard.classList = "d-flex flex-column";
+    let keys = Object.keys(defObjs);
+    for (let i = 0; i < keys.length; i++) {
+      let currentKey = keys[i];
+      let currentDefObj = defObjs[currentKey];
+      reviewCard.appendChild(domOps.createDefCard(currentDefObj));
+    }
+    return reviewCard;
+  }
   return {
     createDefCard,
+    createReviewCard,
   };
 })();
 
