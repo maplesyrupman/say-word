@@ -26,6 +26,13 @@ let testDefObj = {
     ]
 }
 
+var testDefObjs = {
+  interest1: testDefObj,
+  interest2: testDefObj,
+  interest3: testDefObj,
+  interest4: testDefObj,
+  interest5: testDefObj,
+}
 var listOfTestObject = [testDefObj, testDefObj, testDefObj, testDefObj, testDefObj];
 
 const dictionary = (() => {
@@ -36,6 +43,7 @@ const dictionary = (() => {
 
         fetch(apiUrl).then(response => {
             if (response.ok) {
+              console.log(response);
                 response.json().then(data => {
                     let defObj = createDefObj(data, word);
                     appContainer.appendChild(domOps.createDefCard(defObj));
@@ -174,9 +182,24 @@ const domOps = (() => {
     }
     return entryBox;
   }
+  
+  const createReviewCard = (defObjs) => {
+    let reviewCard = document.createElement('div');
+    reviewCard.classList = "d-flex flex-column";
+    reviewCard.appendChild(createDefCard(testDefObj));
 
+    //display all the words saved as definition cards.
+    //use the for loop to iterate over the defObjs's keys.
+    //Pass the values of each definition keys to the createDefCard.
+  
+  
+
+
+    return reviewCard;
+  }
   return {
     createDefCard,
+    createReviewCard,
   };
 })();
 
