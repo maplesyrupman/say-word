@@ -244,21 +244,31 @@ const quizcard = (() => {
 
   const getQuizCard = () => {
     //console.log(index);
-    landingPage[0].style.display = "none";
 
-    if (this.listOfTestObject.length < 3) {
-      prompt(
-        "Please add more words to take quiz.To memorize minimum 3 words should be added."
-      );
-    } else {
+    //landingPage[0].style.display = "none";
+    appContainer.textContent="";
+
       $(cardBody).empty();
       card.style.display = "block";
       index=0;
       generateQuiz();
-    }
+ 
   };
 
   const generateQuiz = () => {
+
+    
+    var listOfObject = [];
+    var wordsToTest = [];
+    var fetchedAddedWordsFromLocalStorage = JSON.parse(
+      localStorage.getItem("addedWords")
+    );
+
+    if(fetchedAddedWordsFromLocalStorage<3){
+      alert("Please save more than 3 words");
+      return;
+    }
+    
     console.log(index);
     if(index==0){
       timecountdown=91;
@@ -286,12 +296,7 @@ const quizcard = (() => {
     document.getElementById("btn-strt-quiz").disabled = true;
     answerPara.textContent = "";
     textbox.value = "";
-    // Card title
-    var listOfObject = [];
-    var wordsToTest = [];
-    var fetchedAddedWordsFromLocalStorage = JSON.parse(
-      localStorage.getItem("addedWords")
-    );
+    
 
     for (
       var i = 0, length = fetchedAddedWordsFromLocalStorage.length;
