@@ -1,30 +1,32 @@
 // DOM Elements
-const appContainer = document.getElementById('app-container');
-const searchBtn = document.getElementById('search-btn');
-const searchField = document.getElementById('search-field');
-
-
+const appContainer = document.getElementById("app-container");
+const searchBtn = document.getElementById("search-btn");
+const searchField = document.getElementById("search-field");
+const quizStartButton = document.getElementById("btn-strt-quiz");
+var timeInterval;
 
 let testDefObj = {
-    word: 'interest',
-    audioUrl: 'https://media.merriam-webster.com/audio/prons/en/us/mp3/i/intere01.mp3',
-    defs: [{
-            fl: 'noun',
-            defSentances: [
-                "a feeling that accompanies or causes special attention to something or someone : concern",
-                "something or someone that arouses such attention",
-                "a quality in a thing or person arousing interest"
-            ]
-        },
-        {
-            fl: 'adjective',
-            defSentances: [
-                "to engage the attention or arouse the interest of",
-                "to induce or persuade to participate or engage"
-            ]
-        }
-    ]
-}
+  word: "interest",
+  audioUrl:
+    "https://media.merriam-webster.com/audio/prons/en/us/mp3/i/intere01.mp3",
+  defs: [
+    {
+      fl: "noun",
+      defSentances: [
+        "a feeling that accompanies or causes special attention to something or someone : concern",
+        "something or someone that arouses such attention",
+        "a quality in a thing or person arousing interest",
+      ],
+    },
+    {
+      fl: "adjective",
+      defSentances: [
+        "to engage the attention or arouse the interest of",
+        "to induce or persuade to participate or engage",
+      ],
+    },
+  ],
+};
 
 var testDefObjs = {
   interest1: testDefObj,
@@ -32,8 +34,14 @@ var testDefObjs = {
   interest3: testDefObj,
   interest4: testDefObj,
   interest5: testDefObj,
-}
-var listOfTestObject = [testDefObj, testDefObj, testDefObj, testDefObj, testDefObj];
+};
+var listOfTestObject = [
+  testDefObj,
+  testDefObj,
+  testDefObj,
+  testDefObj,
+  testDefObj,
+];
 
 const dictionary = (() => {
   let words = {};
@@ -41,16 +49,16 @@ const dictionary = (() => {
   const getDef = (word) => {
     let apiUrl = `https://dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=eef68214-e15e-46fc-8e3b-5c0c4330f2db`;
 
-        fetch(apiUrl).then(response => {
-            if (response.ok) {
-              console.log(response);
-                response.json().then(data => {
-                    let defObj = createDefObj(data, word);
-                    appContainer.appendChild(domOps.createDefCard(defObj));
-                });
-            }
-        })
-    }
+    fetch(apiUrl).then((response) => {
+      if (response.ok) {
+        console.log(response);
+        response.json().then((data) => {
+          let defObj = createDefObj(data, word);
+          appContainer.appendChild(domOps.createDefCard(defObj));
+        });
+      }
+    });
+  };
 
   const stripAstr = (word) => {
     let strippedArr = word.split("*");
@@ -91,9 +99,9 @@ const dictionary = (() => {
 
   const search = (word) => {
     let cleanWord = word.toLowerCase().trim();
-    appContainer.textContent = '';
+    appContainer.textContent = "";
     getDef(cleanWord);
-  }
+  };
 
   const getWords = () => {
     return words;
@@ -101,7 +109,7 @@ const dictionary = (() => {
 
   const addDef = (defObj) => {
     words[defObj.word] = defObj;
-  }
+  };
 
   return {
     getDef,
@@ -109,82 +117,82 @@ const dictionary = (() => {
     getAudioUrl,
     getWords,
     addDef,
-    search
-  }
+    search,
+  };
 })();
 
-// event listener for search button 
-searchBtn.addEventListener('click', (e) => {
+// event listener for search button
+searchBtn.addEventListener("click", (e) => {
   e.preventDefault();
   let searchWord = searchField.value;
   dictionary.search(searchWord);
-
-})
+  document.getElementById("btn-strt-quiz").disabled = false;
+  clearInterval(timeInterval);
+});
 
 const domOps = (() => {
   const createDefCard = (defObj) => {
-    let card = document.createElement('div');
-    card.classList = 'd-inline-block card defCardClass mt-5';
+    let card = document.createElement("div");
+    card.classList = "d-inline-block card defCardClass mt-5";
 
-    let cardBody = document.createElement('div');
-    cardBody.classList.add('card-body');
+    let cardBody = document.createElement("div");
+    cardBody.classList.add("card-body");
 
-    let headingBox = document.createElement('div');
-    headingBox.classList = 'd-flex flex-row justify-content-between';
-    let wordBox = document.createElement('div');
-    wordBox.classList = 'd-flex flex-row';
-    let wordHeading = document.createElement('h2');
-    wordHeading.classList = ('card-title fs-1 mr-2');
+    let headingBox = document.createElement("div");
+    headingBox.classList = "d-flex flex-row justify-content-between";
+    let wordBox = document.createElement("div");
+    wordBox.classList = "d-flex flex-row";
+    let wordHeading = document.createElement("h2");
+    wordHeading.classList = "card-title fs-1 mr-2";
     wordHeading.textContent = defObj.word;
-    let pronounciation = document.createElement('audio');
-    pronounciation.setAttribute('src', defObj.audioUrl);
-    let soundBtn = document.createElement('button');
-    soundBtn.addEventListener('click', () => {
+    let pronounciation = document.createElement("audio");
+    pronounciation.setAttribute("src", defObj.audioUrl);
+    let soundBtn = document.createElement("button");
+    soundBtn.addEventListener("click", () => {
       pronounciation.play();
     });
-    soundBtn.classList = 'btn btn-secondary sound-btn';
+    soundBtn.classList = "btn btn-secondary sound-btn";
     soundBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
     wordBox.appendChild(wordHeading);
     wordBox.appendChild(soundBtn);
-    let saveBtn = document.createElement('button');
-    saveBtn.classList = 'btn btn-primary btn-sm save-btn';
-    saveBtn.textContent = 'Save Word';
+    let saveBtn = document.createElement("button");
+    saveBtn.classList = "btn btn-primary btn-sm save-btn";
+    saveBtn.textContent = "Save Word";
     headingBox.appendChild(wordBox);
     headingBox.appendChild(saveBtn);
     cardBody.appendChild(headingBox);
 
-    saveBtn.addEventListener('click', () => {
+    saveBtn.addEventListener("click", () => {
       dictionary.addDef(defObj);
       storage.addWord();
+    });
 
-    })
-
-    for (let i=0; i< defObj.defs.length; i++) {
+    for (let i = 0; i < defObj.defs.length; i++) {
       cardBody.appendChild(createDefEntry(defObj.defs[i], defObj.word));
     }
 
     card.appendChild(cardBody);
-    return card;    
+    return card;
   };
 
   const createDefEntry = (defEntry, word) => {
-    let entryBox = document.createElement('div');
-    entryBox.classList = 'mt-5';
-    let entryHeading = document.createElement('h4');
+    let entryBox = document.createElement("div");
+    entryBox.classList = "mt-5";
+    let entryHeading = document.createElement("h4");
     entryHeading.innerHTML = `${word} <span class='fs-5 text-muted'>${defEntry.fl}</span>`;
-    entryHeading.classList = 'fs-3';
+    entryHeading.classList = "fs-3";
     entryBox.appendChild(entryHeading);
-    for (let i=0; i < defEntry.defSentances.length; i++) {
-      let defSentance = document.createElement('p');
-      defSentance.classList = 'px-3';
-      defSentance.textContent = `${i+1}. ${defEntry.defSentances[i]}`;
+    for (let i = 0; i < defEntry.defSentances.length; i++) {
+      let defSentance = document.createElement("p");
+      defSentance.classList = "px-3";
+      defSentance.textContent = `${i + 1}. ${defEntry.defSentances[i]}`;
       entryBox.appendChild(defSentance);
     }
     return entryBox;
-  }
-  
+  };
+
   const createReviewCard = (defObjs) => {
-    let reviewCard = document.createElement('div');
+    let reviewCard = document.createElement("div");
     reviewCard.classList = "d-flex flex-column";
     let keys = Object.keys(defObjs);
     for (let i = 0; i < keys.length; i++) {
@@ -193,21 +201,20 @@ const domOps = (() => {
       reviewCard.appendChild(domOps.createDefCard(currentDefObj));
     }
     return reviewCard;
-  }
+  };
   return {
     createDefCard,
     createReviewCard,
   };
 })();
 
-
 // Storage Module
 
 const storage = (() => {
   const addWord = () => {
     let words = dictionary.getWords();
-    localStorage.setItem('addedWords', JSON.stringify(words));
-    
+    localStorage.setItem("addedWords", JSON.stringify(words));
+
     // if (confirmBox) {
     //   if (addedWords.length > 0) {
     //     const listOfStoredWords = addedWords.map(function (wordObj) {
@@ -216,13 +223,13 @@ const storage = (() => {
     //     });
     //     if (listOfStoredWords.includes(Object.keys(searchedWord)[0])) {
     //       window.alert("You Have Already Added This Word To Your List");
-    //       return 
+    //       return
     //     }
     //   }
     //   addedWords.push(searchedWord);
     //   localStorage.setItem(key, JSON.stringify(addedWords));
     // }
-    return 
+    return;
   };
 
   return {
@@ -233,9 +240,7 @@ const storage = (() => {
 // Quiz card Module
 
 const quizcard = (() => {
-
   var timecountdown;
-  var timeInterval;
   var landingPage = document.getElementsByClassName("card-body");
   var para1 = document.createElement("p");
   var para2 = document.createElement("p");
@@ -245,45 +250,66 @@ const quizcard = (() => {
   var correctAnswer = "";
   var answerPara = document.createElement("p");
   var textbox = document.createElement("INPUT");
-  var card = document.createElement('div');
-  var cardBody = document.createElement('div');
-  
+  var card = document.createElement("div");
+  var cardBody = document.createElement("div");
 
   const getQuizCard = () => {
     //console.log(index);
-    landingPage[0].style.display = "none";
 
-    if (this.listOfTestObject.length < 3) {
-      prompt(
-        "Please add more words to take quiz.To memorize minimum 3 words should be added."
-      );
-    } else {
-      $(cardBody).empty();
-      card.style.display = "block";
-      index=0;
-      generateQuiz();
-    }
+    //landingPage[0].style.display = "none";
+    appContainer.textContent = "";
+
+    $(cardBody).empty();
+    card.style.display = "block";
+    index = 0;
+    generateQuiz();
   };
 
   const generateQuiz = () => {
     console.log(index);
-    if(index==0){
-      timecountdown=91;
+    var listOfObject = [];
+    var wordsToTest = [];
+    var fetchedAddedWordsFromLocalStorage = JSON.parse(
+      localStorage.getItem("addedWords")
+    );
+
+    for (obj in fetchedAddedWordsFromLocalStorage) {
+      if (fetchedAddedWordsFromLocalStorage[obj] !== undefined) {
+        listOfObject.push(fetchedAddedWordsFromLocalStorage[obj]);
+      }
+    }
+
+    console.log(listOfObject);
+
+    for (let i = 0; i < 3; i++) {
+      if (listOfObject[i] !== undefined) {
+        wordsToTest.push(listOfObject[i]);
+      }
+    }
+
+    console.log(wordsToTest);
+
+    if (wordsToTest.length < 3) {
+      alert("Please save more than 3 words to start quiz");
+      return;
+    }
+
+    if (index == 0) {
+      timecountdown = 91;
       timeInterval = setInterval(function () {
         timecountdown--;
-    
+
         time.style.color = "blue";
         time.innerHTML = "<br/>Time: " + timecountdown;
         console.log(1);
         if (timecountdown === 0) {
-          console.log("Times up !!")
+          console.log("Times up !!");
           showScore();
           clearInterval(timeInterval);
-         
         }
-      }, 1000);
+      }, 1100);
     }
-    
+
     if (index == 3) {
       console.log("Quiz Done");
       showScore();
@@ -293,34 +319,9 @@ const quizcard = (() => {
     document.getElementById("btn-strt-quiz").disabled = true;
     answerPara.textContent = "";
     textbox.value = "";
-    // Card title
-    var listOfObject = [];
-    var wordsToTest = [];
-    var fetchedAddedWordsFromLocalStorage = JSON.parse(
-      localStorage.getItem("addedWords")
-    );
 
-    for (
-      var i = 0, length = fetchedAddedWordsFromLocalStorage.length;
-      i < length;
-      i++
-    ) {
-      for (obj in fetchedAddedWordsFromLocalStorage[i]) {
-        var attr = String(obj);
-        listOfObject.push(fetchedAddedWordsFromLocalStorage[i][attr]);
-      }
-    }
-
-    console.log(listOfObject);
-
-    for (let i = 0; i < 3; i++) {
-      wordsToTest.push(listOfObject[i]);
-    }
-
-    console.log(wordsToTest);
-
-    card.classList = 'card quiz-card';
-    cardBody.classList.add('card-body');
+    card.classList = "card quiz-card";
+    cardBody.classList.add("card-body");
     quizTitle = document.createElement("h3");
     quizTitle.textContent = "Quiz";
     var quizIns = document.createElement("p");
@@ -357,18 +358,24 @@ const quizcard = (() => {
     quizLiTwo.appendChild(para2);
     quizLiThree.appendChild(para3);
     quizUl.appendChild(quizLiOne);
-    quizUl.appendChild(quizLiTwo)
+    quizUl.appendChild(quizLiTwo);
     quizUl.appendChild(quizLiThree);
     var labelTextbox = document.createElement("p");
     labelTextbox.classList.add("text-lable");
     labelTextbox.textContent = "Guess the word";
     textbox.classList.add("text-box-guess");
+    var quizform = document.createElement("form");
     var button = document.createElement("button");
     button.classList.add("btn");
     button.classList.add("btn-primary");
     button.classList.add("quiz-button");
+    button.type = "submit";
     button.textContent = "Next";
-    button.addEventListener("click", onNext);
+    // Next button event listener
+    button.addEventListener("click", (e) => {
+      e.preventDefault();
+      onNext();
+    });
     var buttonLeave = document.createElement("button");
     buttonLeave.classList.add("btn");
     buttonLeave.classList.add("btn-danger");
@@ -385,41 +392,44 @@ const quizcard = (() => {
     textboxDiv.appendChild(textbox);
     buttonDiv.appendChild(button);
     buttonLeaveDiv.appendChild(buttonLeave);
+    quizform.appendChild(labelTextbox);
+    quizform.appendChild(textboxDiv);
+    quizform.appendChild(answerPara);
+    quizform.appendChild(buttonDiv);
+    quizform.appendChild(buttonLeaveDiv);
     cardBody.appendChild(quizTitle);
     cardBody.appendChild(time);
     cardBody.appendChild(quizIns);
     cardBody.appendChild(quizUl);
-    cardBody.appendChild(labelTextbox);
-    cardBody.appendChild(textboxDiv);
-    cardBody.appendChild(answerPara);
-    cardBody.appendChild(buttonDiv);
-    cardBody.appendChild(buttonLeaveDiv);
+    cardBody.appendChild(quizform);
     card.appendChild(cardBody);
     appContainer.appendChild(card);
-    //starTimer();
-  };
-
-  const starTimer = () => {
-   
   };
 
   const onNext = () => {
-   
+    var emo = emoji.getEmojis();
     //console.log(textbox.value);
 
-    var answer=textbox.value;
+    var answer = textbox.value;
 
-    if(textbox.value==""){
+    if (textbox.value == "") {
       alert("Answer cannot be empty");
       return;
     }
     index = index + 1;
 
+    console.log(emo);
     if (answer.toLowerCase() == correctAnswer.toLowerCase()) {
-      answerPara.textContent = "Correct";
+      console.log(emo.smile);
+      corrEmo = emo.smile == undefined ? "1F601" : emo.smile;
+      answerPara.innerHTML =
+        "Correct" + " " + '<p class="h2">&#x' + corrEmo + "</p>";
       answerPara.style.textAlign = "center";
     } else {
-      answerPara.textContent = "Wrong";
+      console.log(emo.sad);
+      wronEmo = emo.sad == undefined ? "1F622" : emo.sad;
+      answerPara.innerHTML =
+        "Wrong" + " " + '<p class="h2">&#x' + wronEmo + "</p>";
       answerPara.style.textAlign = "center";
     }
 
@@ -430,7 +440,7 @@ const quizcard = (() => {
   };
 
   const showScore = () => {
-    console.log("Time ID:" +timeInterval);
+    console.log("Time ID:" + timeInterval);
     clearInterval(timeInterval);
     $(cardBody).empty();
     var showScoreTitle = document.createElement("h3");
@@ -457,23 +467,74 @@ const quizcard = (() => {
   };
 
   const goToHome = () => {
-   
     clearInterval(timeInterval);
     card.style.display = "none";
     landingPage[0].style.display = "block";
     $(cardBody).empty();
+    // default word
+    dictionary.search("rain");
     document.getElementById("btn-strt-quiz").disabled = false;
+  };
+
+  const getTimeInterval = () => {
+    return timeInterval;
   };
 
   return {
     getQuizCard,
     generateQuiz,
-    starTimer,
     onNext,
     showScore,
     goToHome,
+    getTimeInterval,
   };
 })();
 
-var quizStartButton = document.getElementById("btn-strt-quiz");
+// Start quiz button event listener
 quizStartButton.addEventListener("click", quizcard.getQuizCard);
+
+const emoji = (() => {
+  let emojis = {};
+
+  const getSimeleyEmoji = () => {
+    fetch(
+      "https://emoji-api.com/emojis/beaming-face-with-smiling-eyes?access_key=548c874a77bdb7e98f428e9451e5e719da3ebb3f"
+    )
+      .then((response) => {
+        if (response.ok) {
+          response.json().then((data) => {
+            emojis.smile = data[0].codePoint;
+          });
+        }
+      })
+      .catch((error) => {
+        // handle the error
+      });
+  };
+
+  const getCryEmoji = () => {
+    fetch(
+      "https://emoji-api.com/emojis/crying-face?access_key=548c874a77bdb7e98f428e9451e5e719da3ebb3f"
+    )
+      .then((response) => {
+        if (response.ok) {
+          response.json().then((data) => {
+            emojis.sad = data[0].codePoint;
+          });
+        }
+      })
+      .catch((error) => {
+        // handle the error
+      });
+  };
+  const getEmojis = () => {
+    getSimeleyEmoji();
+    getCryEmoji();
+    return emojis;
+  };
+
+  return {
+    getSimeleyEmoji,
+    getEmojis,
+  };
+})();
