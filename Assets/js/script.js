@@ -207,6 +207,8 @@ const storage = (() => {
     return 
   };
 
+  
+
   return {
     addWord,
   };
@@ -245,6 +247,7 @@ const quizcard = (() => {
 
   const generateQuiz = () => {
 
+    
     console.log(index);
     var listOfObject = [];
     var wordsToTest = [];
@@ -393,7 +396,8 @@ const quizcard = (() => {
   };
 
   const onNext = () => {
-   
+  
+     var emo = emoji.getEmojis();
     //console.log(textbox.value);
 
     var answer=textbox.value;
@@ -404,11 +408,18 @@ const quizcard = (() => {
     }
     index = index + 1;
 
+   
+   
+   console.log(emo);
     if (answer.toLowerCase() == correctAnswer.toLowerCase()) {
-      answerPara.textContent = "Correct";
+      console.log(emo[1]);
+      corrEmo = emo[1]==undefined?'1F601':emo[1];
+      answerPara.innerHTML = "Correct" + " " +'<p class="h2">&#x'+corrEmo+'</p>';
       answerPara.style.textAlign = "center";
     } else {
-      answerPara.textContent = "Wrong";
+      console.log(emo[0]);
+      wronEmo =emo[0]==undefined?'1F622':emo[0];
+      answerPara.innerHTML = "Wrong"+" "+'<p class="h2">&#x'+wronEmo+'</p>';
       answerPara.style.textAlign = "center";
     }
 
@@ -473,6 +484,46 @@ const quizcard = (() => {
 // Start quiz button event listener
 quizStartButton.addEventListener("click", quizcard.getQuizCard);
 
-const quizcard = (() => {
-  
+const emoji = (() => {
+
+  let emojis=[];
+
+  const getSimeleyEmoji =()=>{
+    fetch('https://emoji-api.com/emojis/beaming-face-with-smiling-eyes?access_key=548c874a77bdb7e98f428e9451e5e719da3ebb3f')
+    .then(response => {
+      if (response.ok) {
+        response.json().then(data => {
+            emojis.push(data[0].codePoint);
+        });
+       }   
+    })
+    .catch(error => {
+        // handle the error
+    });
+  }
+
+  const getCryEmoji =()=>{
+    fetch('https://emoji-api.com/emojis/crying-face?access_key=548c874a77bdb7e98f428e9451e5e719da3ebb3f')
+    .then(response => {
+      if (response.ok) {
+        response.json().then(data => {
+            emojis.push(data[0].codePoint);
+        });
+       }   
+    })
+    .catch(error => {
+        // handle the error
+    });
+  }
+  const getEmojis=()=>{
+    getSimeleyEmoji();
+    getCryEmoji();
+    return emojis;
+  }
+
+  return{
+    getSimeleyEmoji,
+    getEmojis
+  }
+
 })();
