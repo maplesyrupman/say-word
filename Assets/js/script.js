@@ -412,13 +412,13 @@ const quizcard = (() => {
    
    console.log(emo);
     if (answer.toLowerCase() == correctAnswer.toLowerCase()) {
-      console.log(emo[1]);
-      corrEmo = emo[1]==undefined?'1F601':emo[1];
+      console.log(emo.smile);
+      corrEmo = emo.smile==undefined?'1F601':emo.smile;
       answerPara.innerHTML = "Correct" + " " +'<p class="h2">&#x'+corrEmo+'</p>';
       answerPara.style.textAlign = "center";
     } else {
-      console.log(emo[0]);
-      wronEmo =emo[0]==undefined?'1F622':emo[0];
+      console.log(emo.sad);
+      wronEmo =emo.sad==undefined?'1F622':emo.sad;
       answerPara.innerHTML = "Wrong"+" "+'<p class="h2">&#x'+wronEmo+'</p>';
       answerPara.style.textAlign = "center";
     }
@@ -486,14 +486,14 @@ quizStartButton.addEventListener("click", quizcard.getQuizCard);
 
 const emoji = (() => {
 
-  let emojis=[];
+  let emojis={};
 
   const getSimeleyEmoji =()=>{
     fetch('https://emoji-api.com/emojis/beaming-face-with-smiling-eyes?access_key=548c874a77bdb7e98f428e9451e5e719da3ebb3f')
     .then(response => {
       if (response.ok) {
         response.json().then(data => {
-            emojis.push(data[0].codePoint);
+            emojis.smile=data[0].codePoint;
         });
        }   
     })
@@ -507,7 +507,7 @@ const emoji = (() => {
     .then(response => {
       if (response.ok) {
         response.json().then(data => {
-            emojis.push(data[0].codePoint);
+            emojis.sad = data[0].codePoint;
         });
        }   
     })
