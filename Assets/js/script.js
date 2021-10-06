@@ -2,8 +2,8 @@
 const appContainer = document.getElementById('app-container');
 const searchBtn = document.getElementById('search-btn');
 const searchField = document.getElementById('search-field');
-
-
+const quizStartButton = document.getElementById("btn-strt-quiz");
+var timeInterval;
 
 let testDefObj = {
     word: 'interest',
@@ -110,6 +110,8 @@ searchBtn.addEventListener('click', (e) => {
   e.preventDefault();
   let searchWord = searchField.value;
   dictionary.search(searchWord);
+  document.getElementById("btn-strt-quiz").disabled = false;
+  clearInterval(timeInterval);
 
 })
 
@@ -215,7 +217,6 @@ const storage = (() => {
 const quizcard = (() => {
 
   var timecountdown;
-  var timeInterval;
   var landingPage = document.getElementsByClassName("card-body");
   var para1 = document.createElement("p");
   var para2 = document.createElement("p");
@@ -244,19 +245,36 @@ const quizcard = (() => {
 
   const generateQuiz = () => {
 
-    
+    console.log(index);
     var listOfObject = [];
     var wordsToTest = [];
     var fetchedAddedWordsFromLocalStorage = JSON.parse(
       localStorage.getItem("addedWords")
     );
 
-    if(fetchedAddedWordsFromLocalStorage<3){
-      alert("Please save more than 3 words");
+    for (obj in fetchedAddedWordsFromLocalStorage) {
+      if(fetchedAddedWordsFromLocalStorage[obj]!==undefined){
+       listOfObject.push(fetchedAddedWordsFromLocalStorage[obj]);
+      }
+    }
+  
+
+  console.log(listOfObject);
+
+  for (let i = 0; i < 3; i++) {
+    if(listOfObject[i]!==undefined){
+    wordsToTest.push(listOfObject[i]);
+    }
+  }
+
+  console.log(wordsToTest);
+
+    if(wordsToTest.length<3){
+      alert("Please save more than 3 words to start quiz");
       return;
     }
     
-    console.log(index);
+  
     if(index==0){
       timecountdown=91;
       timeInterval = setInterval(function () {
@@ -271,7 +289,7 @@ const quizcard = (() => {
           clearInterval(timeInterval);
          
         }
-      }, 1000);
+      }, 1100);
     }
     
     if (index == 3) {
@@ -285,24 +303,8 @@ const quizcard = (() => {
     textbox.value = "";
     
 
-    for (
-      var i = 0, length = fetchedAddedWordsFromLocalStorage.length;
-      i < length;
-      i++
-    ) {
-      for (obj in fetchedAddedWordsFromLocalStorage[i]) {
-        var attr = String(obj);
-        listOfObject.push(fetchedAddedWordsFromLocalStorage[i][attr]);
-      }
-    }
-
-    console.log(listOfObject);
-
-    for (let i = 0; i < 3; i++) {
-      wordsToTest.push(listOfObject[i]);
-    }
-
-    console.log(wordsToTest);
+    
+      
 
     card.classList = 'card quiz-card';
     cardBody.classList.add('card-body');
@@ -348,12 +350,18 @@ const quizcard = (() => {
     labelTextbox.classList.add("text-lable");
     labelTextbox.textContent = "Guess the word";
     textbox.classList.add("text-box-guess");
+    var quizform = document.createElement("form");
     var button = document.createElement("button");
     button.classList.add("btn");
     button.classList.add("btn-primary");
     button.classList.add("quiz-button");
+    button.type="submit";
     button.textContent = "Next";
-    button.addEventListener("click", onNext);
+    // Next button event listener
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      onNext();
+    })
     var buttonLeave = document.createElement("button");
     buttonLeave.classList.add("btn");
     buttonLeave.classList.add("btn-danger");
@@ -370,22 +378,18 @@ const quizcard = (() => {
     textboxDiv.appendChild(textbox);
     buttonDiv.appendChild(button);
     buttonLeaveDiv.appendChild(buttonLeave);
+    quizform.appendChild(labelTextbox);
+    quizform.appendChild(textboxDiv);
+    quizform.appendChild(answerPara);
+    quizform.appendChild(buttonDiv);
+    quizform.appendChild(buttonLeaveDiv);
     cardBody.appendChild(quizTitle);
     cardBody.appendChild(time);
     cardBody.appendChild(quizIns);
     cardBody.appendChild(quizUl);
-    cardBody.appendChild(labelTextbox);
-    cardBody.appendChild(textboxDiv);
-    cardBody.appendChild(answerPara);
-    cardBody.appendChild(buttonDiv);
-    cardBody.appendChild(buttonLeaveDiv);
+    cardBody.appendChild(quizform);
     card.appendChild(cardBody);
     appContainer.appendChild(card);
-    //starTimer();
-  };
-
-  const starTimer = () => {
-   
   };
 
   const onNext = () => {
@@ -447,18 +451,28 @@ const quizcard = (() => {
     card.style.display = "none";
     landingPage[0].style.display = "block";
     $(cardBody).empty();
+    // default word
+    dictionary.search('rain');
     document.getElementById("btn-strt-quiz").disabled = false;
+  };
+
+  const getTimeInterval =()=>{
+    return timeInterval;
   };
 
   return {
     getQuizCard,
     generateQuiz,
-    starTimer,
     onNext,
     showScore,
     goToHome,
+    getTimeInterval
   };
 })();
 
-var quizStartButton = document.getElementById("btn-strt-quiz");
+// Start quiz button event listener
 quizStartButton.addEventListener("click", quizcard.getQuizCard);
+
+const quizcard = (() => {
+  
+})();
