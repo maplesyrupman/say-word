@@ -1,7 +1,7 @@
 #app-container {
   height: 94vh;
   overflow: auto;
-  padding-top: 5%;
+  padding: 5% 0;
   overflow: auto;
 }
 
