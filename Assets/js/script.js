@@ -44,18 +44,6 @@ const dictionary = (() => {
         })
     }
 
-    const getAntSyn = word => {
-        let apiUrl = `https://dictionaryapi.com/api/v3/references/thesaurus/json/${word}?key=15205c99-2cb8-498d-a9f9-f5bdc4865029`;
-
-        fetch(apiUrl).then(response => {
-            if (response.ok) {
-                response.json().then(data => {
-                    console.log(data)
-                });
-            }
-        });
-      };
-
   const stripAstr = (word) => {
     let strippedArr = word.split("*");
     return strippedArr.join("");
@@ -96,7 +84,6 @@ const dictionary = (() => {
   const search = (word) => {
     let cleanWord = word.toLowerCase().trim();
     appContainer.textContent = '';
-
     getDef(cleanWord);
   }
 
@@ -110,7 +97,6 @@ const dictionary = (() => {
 
   return {
     getDef,
-    getAntSyn,
     stripAstr,
     getAudioUrl,
     getWords,
@@ -119,6 +105,7 @@ const dictionary = (() => {
   }
 })();
 
+// event listener for search button 
 searchBtn.addEventListener('click', (e) => {
   e.preventDefault();
   let searchWord = searchField.value;
@@ -161,6 +148,7 @@ const domOps = (() => {
     saveBtn.addEventListener('click', () => {
       dictionary.addDef(defObj);
       storage.addWord();
+
     })
 
     for (let i=0; i< defObj.defs.length; i++) {
@@ -197,24 +185,23 @@ const domOps = (() => {
 
 const storage = (() => {
   const addWord = () => {
-    var searchedWord = dictionary.getWords();
-    const key = "addedWords";
-    var addedWords = JSON.parse(localStorage.getItem("addedWords")) || [];
-    var confirmBox = confirm("Do You Want To Add This To Your List?");
-    if (confirmBox) {
-      if (addedWords.length > 0) {
-        const listOfStoredWords = addedWords.map(function (wordObj) {
-          const wordFromList = Object.keys(wordObj)[0];
-          return wordFromList;
-        });
-        if (listOfStoredWords.includes(Object.keys(searchedWord)[0])) {
-          window.alert("You Have Already Added This Word To Your List");
-          return 
-        }
-      }
-      addedWords.push(searchedWord);
-      localStorage.setItem(key, JSON.stringify(addedWords));
-    }
+    let words = dictionary.getWords();
+    localStorage.setItem('addedWords', JSON.stringify(words));
+    
+    // if (confirmBox) {
+    //   if (addedWords.length > 0) {
+    //     const listOfStoredWords = addedWords.map(function (wordObj) {
+    //       const wordFromList = Object.keys(wordObj)[0];
+    //       return wordFromList;
+    //     });
+    //     if (listOfStoredWords.includes(Object.keys(searchedWord)[0])) {
+    //       window.alert("You Have Already Added This Word To Your List");
+    //       return 
+    //     }
+    //   }
+    //   addedWords.push(searchedWord);
+    //   localStorage.setItem(key, JSON.stringify(addedWords));
+    // }
     return 
   };
 
