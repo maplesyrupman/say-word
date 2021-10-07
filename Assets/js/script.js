@@ -198,6 +198,10 @@ const domOps = (() => {
   };
 
   const createReviewCard = (defObjs) => {
+    if (Object.keys(defObjs).length == 0) {
+      return createNoSavedWordsMessage();
+    }
+
     let reviewCard = document.createElement('div');
     reviewCard.classList = "d-flex flex-column justify-content-center align-items-center";
     let keys = Object.keys(defObjs);
@@ -222,6 +226,21 @@ const domOps = (() => {
     notFoundDiv.appendChild(notFoundPara);
 
     return notFoundDiv;
+  }
+
+  const createNoSavedWordsMessage = () => {
+    let messageContainer = document.createElement('div');
+    messageContainer.classList = 'border border-dark border-2 d-inline-flex flex-column justify-content-center align-items-center p-5';
+    let messageHeading = document.createElement('h3');
+    messageHeading.classList = 'fs-4 text-secondary';
+    messageHeading.textContent = 'You don\'t have any words saved for review';
+    messageContainer.appendChild(messageHeading);
+    let messagePara = document.createElement('p');
+    messagePara.classList = 'fs-5 text-secondary';
+    messagePara.textContent = 'Please search for a word to begin';
+    messageContainer.appendChild(messagePara);
+    
+    return messageContainer;
   }
   
   return {
