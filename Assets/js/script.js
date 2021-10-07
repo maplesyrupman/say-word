@@ -17,7 +17,7 @@ const dictionary = (() => {
         fetch(apiUrl).then(response => {
             if (response.ok) {
                 response.json().then(data => {
-                  if (data[0].hwi) {
+                  if (data[0] && data[0].hwi) {
                     let defObj = createDefObj(data, word);
                     appContainer.appendChild(domOps.createDefCard(defObj));
                   } else {
