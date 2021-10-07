@@ -49,20 +49,20 @@
   border-width: 3px;
 }
 
-.me-7{
+.me-7 {
   color: white;
 
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   font-weight: bolder;
   border-width: 3px;
 }
 
- h3,
+h3,
 h5 {
   text-align: center;
 }
 
- h5 {
+h5 {
   color: blue;
 }
 
@@ -114,8 +114,8 @@ li {
   margin-top: 5px;
 }
 
-.quiz-card{
-  width:50%
+.quiz-card {
+  width: 50%;
 }
 
 /* --- start of def card styles --- */
