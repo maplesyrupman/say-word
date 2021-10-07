@@ -2,6 +2,7 @@
 const appContainer = document.getElementById('app-container');
 const searchBtn = document.getElementById('search-btn');
 const searchField = document.getElementById('search-field');
+const reviewBtn = document.getElementById('review-btn');
 
 
 
@@ -43,10 +44,14 @@ const dictionary = (() => {
 
         fetch(apiUrl).then(response => {
             if (response.ok) {
-              console.log(response);
                 response.json().then(data => {
+                  console.log(data);
+                  if (data[0].hwi) {
                     let defObj = createDefObj(data, word);
                     appContainer.appendChild(domOps.createDefCard(defObj));
+                  } else {
+                    appContainer.appendChild(domOps.createWordNotFound(word));
+                  }
                 });
             }
         })
@@ -118,7 +123,7 @@ searchBtn.addEventListener('click', (e) => {
   e.preventDefault();
   let searchWord = searchField.value;
   dictionary.search(searchWord);
-
+  searchField.value = '';
 })
 
 const domOps = (() => {
@@ -185,21 +190,42 @@ const domOps = (() => {
   
   const createReviewCard = (defObjs) => {
     let reviewCard = document.createElement('div');
-    reviewCard.classList = "d-flex flex-column";
+    reviewCard.classList = "d-flex flex-column justify-content-center align-items-center";
     let keys = Object.keys(defObjs);
     for (let i = 0; i < keys.length; i++) {
       let currentKey = keys[i];
       let currentDefObj = defObjs[currentKey];
-      reviewCard.appendChild(domOps.createDefCard(currentDefObj));
+      reviewCard.appendChild(createDefCard(currentDefObj));
     }
     return reviewCard;
+  }
+
+  const createWordNotFound = (wrongWord) => {
+    let notFoundDiv = document.createElement('div');
+    notFoundDiv.classList = 'border border-warning border-2 d-inline-flex flex-column justify-content-center align-items-center p-5';
+    let notFoundHeading = document.createElement('h3');
+    notFoundHeading.classList = 'fs-4 text-secondary';
+    notFoundHeading.textContent = `We couldn't find the word "${wrongWord}" in our files`;
+    notFoundDiv.appendChild(notFoundHeading);
+    let notFoundPara = document.createElement('p');
+    notFoundPara.classList = 'fs-5 text-secondary';
+    notFoundPara.textContent = 'Please check your spelling and try again';
+    notFoundDiv.appendChild(notFoundPara);
+
+    return notFoundDiv;
   }
   return {
     createDefCard,
     createReviewCard,
+    createWordNotFound,
   };
 })();
 
+// event listener for reviewWords button
+reviewBtn.addEventListener('click', () => {
+  appContainer.textContent = '';
+  appContainer.appendChild(domOps.createReviewCard(dictionary.getWords()));
+});
 
 // Storage Module
 
