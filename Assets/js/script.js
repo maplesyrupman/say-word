@@ -17,7 +17,6 @@ const dictionary = (() => {
         fetch(apiUrl).then(response => {
             if (response.ok) {
                 response.json().then(data => {
-                  console.log(data);
                   if (data[0].hwi) {
                     let defObj = createDefObj(data, word);
                     appContainer.appendChild(domOps.createDefCard(defObj));
@@ -80,6 +79,10 @@ const dictionary = (() => {
       words = newWords;
     }
 
+    const removeWord = (word) => {
+      delete words[word];
+    }
+
     const addDef = (defObj) => {
         words[defObj.word] = defObj;
     }
@@ -91,6 +94,7 @@ const dictionary = (() => {
         getWords,
         setWords,
         addDef,
+        removeWord,
         search
     }
 })()
@@ -122,17 +126,18 @@ const domOps = (() => {
     soundBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
     wordBox.appendChild(wordHeading);
     wordBox.appendChild(soundBtn);
-    let saveBtn = document.createElement("button");
-    saveBtn.classList = "btn btn-primary btn-sm save-btn";
-    saveBtn.textContent = "Save Word";
+    let saveDeleteBtn = createSaveDeleteBtn(isReview, defObj);
+    // let saveBtn = document.createElement("button");
+    // saveBtn.classList = "btn btn-primary btn-sm save-delete-btn";
+    // saveBtn.textContent = "Save Word";
     headingBox.appendChild(wordBox);
-    headingBox.appendChild(saveBtn);
+    headingBox.appendChild(saveDeleteBtn);
     cardBody.appendChild(headingBox);
 
-    saveBtn.addEventListener("click", () => {
-      dictionary.addDef(defObj);
-      storage.saveWords();
-    });
+    // saveBtn.addEventListener("click", () => {
+    //   dictionary.addDef(defObj);
+    //   storage.saveWords();
+    // });
 
     for (let i = 0; i < defObj.defs.length; i++) {
       cardBody.appendChild(createDefEntry(defObj.defs[i], defObj.word));
@@ -142,8 +147,30 @@ const domOps = (() => {
     return card;
   };
 
-  const createSaveOrDeleteBtn = (isReview) => {
+  const createSaveDeleteBtn = (isReview, defObj) => {
+    let btn = document.createElement("button");
+    btn.classList = "btn btn-sm save-delete-btn";
+    if (isReview) {
+      btn.classList.add('btn-danger');
+      btn.textContent = 'Delete Word';
+      btn.setAttribute('data-is-save', false);
+      btn.addEventListener('click', () => {
+        dictionary.removeWord(defObj.word);
+        storage.saveWords();
+        appContainer.textContent = '';
+        appContainer.appendChild(createReviewCard(dictionary.getWords()));
+      });
+    } else {
+      btn.classList.add('btn-primary');
+      btn.textContent = 'Save Word';
+      btn.setAttribute('data-is-save', true);
+      btn.addEventListener('click', () => {
+        dictionary.addDef(defObj);
+        storage.saveWords();
+      })
+    }
 
+    return btn;
   }
 
   const createDefEntry = (defEntry, word) => {
@@ -167,12 +194,12 @@ const domOps = (() => {
       return createNoSavedWordsMessage();
     }
     let reviewCard = document.createElement('div');
-    reviewCard.classList = "d-flex flex-column justify-content-center align-items-center";
+    reviewCard.classList = "d-flex flex-column justify-content-center align-items-center w-100";
     let keys = Object.keys(defObjs);
     for (let i = 0; i < keys.length; i++) {
       let currentKey = keys[i];
       let currentDefObj = defObjs[currentKey];
-      reviewCard.appendChild(createDefCard(currentDefObj));
+      reviewCard.appendChild(createDefCard(currentDefObj, true));
     }
     return reviewCard;
   }
@@ -223,7 +250,10 @@ const storage = (() => {
     };
 
     const getWords = () => {
+      if(localStorage.getItem('addedWords')) {
         return JSON.parse(localStorage.getItem('addedWords'))
+      }
+      return {};
 
     };
 
