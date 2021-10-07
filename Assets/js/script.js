@@ -6,54 +6,17 @@ const quizStartButton = document.getElementById("btn-strt-quiz");
 const reviewBtn = document.getElementById('review-btn');
 var timeInterval;
 
-let testDefObj = {
-  word: "interest",
-  audioUrl:
-    "https://media.merriam-webster.com/audio/prons/en/us/mp3/i/intere01.mp3",
-  defs: [
-    {
-      fl: "noun",
-      defSentances: [
-        "a feeling that accompanies or causes special attention to something or someone : concern",
-        "something or someone that arouses such attention",
-        "a quality in a thing or person arousing interest",
-      ],
-    },
-    {
-      fl: "adjective",
-      defSentances: [
-        "to engage the attention or arouse the interest of",
-        "to induce or persuade to participate or engage",
-      ],
-    },
-  ],
-};
 
-var testDefObjs = {
-  interest1: testDefObj,
-  interest2: testDefObj,
-  interest3: testDefObj,
-  interest4: testDefObj,
-  interest5: testDefObj,
-};
-var listOfTestObject = [
-  testDefObj,
-  testDefObj,
-  testDefObj,
-  testDefObj,
-  testDefObj,
-];
 
 const dictionary = (() => {
-  let words = {};
+    let words = {};
 
-  const getDef = (word) => {
-    let apiUrl = `https://dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=eef68214-e15e-46fc-8e3b-5c0c4330f2db`;
+    const getDef = (word) => {
+        let apiUrl = `https://dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=eef68214-e15e-46fc-8e3b-5c0c4330f2db`;
 
         fetch(apiUrl).then(response => {
             if (response.ok) {
                 response.json().then(data => {
-                  console.log(data);
                   if (data[0].hwi) {
                     let defObj = createDefObj(data, word);
                     appContainer.appendChild(domOps.createDefCard(defObj));
@@ -65,79 +28,81 @@ const dictionary = (() => {
         })
     }
 
-  const stripAstr = (word) => {
-    let strippedArr = word.split("*");
-    return strippedArr.join("");
-  };
-
-  const createDefObj = (defArr, word) => {
-    let defObj = {
-      word: word,
-      audioUrl: getAudioUrl(defArr),
-      defs: [],
+    const stripAstr = (word) => {
+        let strippedArr = word.split("*");
+        return strippedArr.join("");
     };
-    for (let i = 0; i < defArr.length; i++) {
-      let currentDef = defArr[i];
-      if (stripAstr(currentDef.hwi.hw) == word) {
-        let type = {
-          fl: currentDef.fl,
-          defSentances: currentDef.shortdef,
+
+    const createDefObj = (defArr, word) => {
+        let defObj = {
+            word: word,
+            audioUrl: getAudioUrl(defArr),
+            defs: [],
         };
-        defObj.defs.push(type);
-      } else {
-        break;
-      }
+        for (let i = 0; i < defArr.length; i++) {
+            let currentDef = defArr[i];
+            if (stripAstr(currentDef.hwi.hw) == word) {
+                let type = {
+                    fl: currentDef.fl,
+                    defSentances: currentDef.shortdef,
+                };
+                defObj.defs.push(type);
+            } else {
+                break;
+            }
+        }
+        return defObj;
+    };
+
+    const getAudioUrl = (defArr) => {
+        let baseFilename = defArr[0].hwi.prs[0].sound.audio;
+        let subdirectory =
+            baseFilename.substr(0, 3) == "bix" ?
+            "bix" :
+            baseFilename.substr(0, 3) == "gg" ?
+            "gg" :
+            baseFilename[0];
+        return `https://media.merriam-webster.com/audio/prons/en/us/mp3/${subdirectory}/${baseFilename}.mp3`;
+    };
+
+    const search = (word) => {
+        let cleanWord = word.toLowerCase().trim();
+        appContainer.textContent = '';
+        getDef(cleanWord);
     }
-    return defObj;
-  };
 
-  const getAudioUrl = (defArr) => {
-    let baseFilename = defArr[0].hwi.prs[0].sound.audio;
-    let subdirectory =
-      baseFilename.substr(0, 3) == "bix"
-        ? "bix"
-        : baseFilename.substr(0, 3) == "gg"
-        ? "gg"
-        : baseFilename[0];
-    return `https://media.merriam-webster.com/audio/prons/en/us/mp3/${subdirectory}/${baseFilename}.mp3`;
-  };
+    const getWords = () => {
+        return words;
+    };
 
-  const search = (word) => {
-    let cleanWord = word.toLowerCase().trim();
-    appContainer.textContent = "";
-    getDef(cleanWord);
-  };
+    const setWords = (newWords) => {
+      words = newWords;
+    }
 
-  const getWords = () => {
-    return words;
-  };
+    const removeWord = (word) => {
+      delete words[word];
+    }
 
-  const addDef = (defObj) => {
-    words[defObj.word] = defObj;
-  };
+    const addDef = (defObj) => {
+        words[defObj.word] = defObj;
+    }
 
-  return {
-    getDef,
-    stripAstr,
-    getAudioUrl,
-    getWords,
-    addDef,
-    search,
-  };
-})();
+    return {
+        getDef,
+        stripAstr,
+        getAudioUrl,
+        getWords,
+        setWords,
+        addDef,
+        removeWord,
+        search
+    }
+})()
 
-// event listener for search button
-searchBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  let searchWord = searchField.value;
-  dictionary.search(searchWord);
-  searchField.value = '';
-  document.getElementById("btn-strt-quiz").disabled = false;
-  clearInterval(timeInterval);
-});
+
 
 const domOps = (() => {
-  const createDefCard = (defObj) => {
+  const createDefCard = (defObj, isReview=false) => {
     let card = document.createElement("div");
     card.classList = "d-inline-block card defCardClass mt-5";
 
@@ -161,17 +126,18 @@ const domOps = (() => {
     soundBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
     wordBox.appendChild(wordHeading);
     wordBox.appendChild(soundBtn);
-    let saveBtn = document.createElement("button");
-    saveBtn.classList = "btn btn-primary btn-sm save-btn";
-    saveBtn.textContent = "Save Word";
+    let saveDeleteBtn = createSaveDeleteBtn(isReview, defObj);
+    // let saveBtn = document.createElement("button");
+    // saveBtn.classList = "btn btn-primary btn-sm save-delete-btn";
+    // saveBtn.textContent = "Save Word";
     headingBox.appendChild(wordBox);
-    headingBox.appendChild(saveBtn);
+    headingBox.appendChild(saveDeleteBtn);
     cardBody.appendChild(headingBox);
 
-    saveBtn.addEventListener("click", () => {
-      dictionary.addDef(defObj);
-      storage.addWord();
-    });
+    // saveBtn.addEventListener("click", () => {
+    //   dictionary.addDef(defObj);
+    //   storage.saveWords();
+    // });
 
     for (let i = 0; i < defObj.defs.length; i++) {
       cardBody.appendChild(createDefEntry(defObj.defs[i], defObj.word));
@@ -180,6 +146,37 @@ const domOps = (() => {
     card.appendChild(cardBody);
     return card;
   };
+
+  const createSaveDeleteBtn = (isReview, defObj) => {
+    let btn = document.createElement("button");
+    btn.classList = "btn btn-sm";
+    if (isReview) {
+      btn.classList.add('btn-danger');
+      btn.classList.add('delete-btn')
+      btn.innerHTML = '<i class="fas fa-times"></i>';
+      btn.setAttribute('data-is-save', false);
+      btn.addEventListener('click', () => {
+        dictionary.removeWord(defObj.word);
+        storage.saveWords();
+        appContainer.textContent = '';
+        appContainer.appendChild(createReviewCard(dictionary.getWords()));
+      });
+    } else {
+      btn.classList.add('btn-primary');
+      btn.classList.add('save-btn');
+      btn.textContent = 'Save Word';
+      btn.setAttribute('data-is-save', true);
+      btn.addEventListener('click', () => {
+        dictionary.addDef(defObj);
+        storage.saveWords();
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-secondary');
+        btn.disabled = true;
+      })
+    }
+
+    return btn;
+  }
 
   const createDefEntry = (defEntry, word) => {
     let entryBox = document.createElement("div");
@@ -198,13 +195,16 @@ const domOps = (() => {
   };
 
   const createReviewCard = (defObjs) => {
+    if (Object.keys(defObjs).length == 0) {
+      return createNoSavedWordsMessage();
+    }
     let reviewCard = document.createElement('div');
-    reviewCard.classList = "d-flex flex-column justify-content-center align-items-center";
+    reviewCard.classList = "d-flex flex-column justify-content-center align-items-center w-100";
     let keys = Object.keys(defObjs);
     for (let i = 0; i < keys.length; i++) {
       let currentKey = keys[i];
       let currentDefObj = defObjs[currentKey];
-      reviewCard.appendChild(createDefCard(currentDefObj));
+      reviewCard.appendChild(createDefCard(currentDefObj, true));
     }
     return reviewCard;
   }
@@ -223,6 +223,21 @@ const domOps = (() => {
 
     return notFoundDiv;
   }
+
+  const createNoSavedWordsMessage = () => {
+    let messageContainer = document.createElement('div');
+    messageContainer.classList = 'border border-dark border-2 d-inline-flex flex-column justify-content-center align-items-center p-5';
+    let messageHeading = document.createElement('h3');
+    messageHeading.classList = 'fs-4 text-secondary';
+    messageHeading.textContent = 'You don\'t have any words saved for review';
+    messageContainer.appendChild(messageHeading);
+    let messagePara = document.createElement('p');
+    messagePara.classList = 'fs-5 text-secondary';
+    messagePara.textContent = 'Please search for a word to begin';
+    messageContainer.appendChild(messagePara);
+    
+    return messageContainer;
+  }
   
   return {
     createDefCard,
@@ -231,42 +246,29 @@ const domOps = (() => {
   };
 })();
 
-// event listener for reviewWords button
-reviewBtn.addEventListener('click', () => {
-  appContainer.textContent = '';
-  appContainer.appendChild(domOps.createReviewCard(dictionary.getWords()));
-});
 
-// Storage Module
 
 const storage = (() => {
-  const addWord = () => {
-    let words = dictionary.getWords();
-    localStorage.setItem("addedWords", JSON.stringify(words));
+    const saveWords = () => {
+        let words = dictionary.getWords();
+        localStorage.setItem("addedWords", JSON.stringify(words));
+    };
 
-    // if (confirmBox) {
-    //   if (addedWords.length > 0) {
-    //     const listOfStoredWords = addedWords.map(function (wordObj) {
-    //       const wordFromList = Object.keys(wordObj)[0];
-    //       return wordFromList;
-    //     });
-    //     if (listOfStoredWords.includes(Object.keys(searchedWord)[0])) {
-    //       window.alert("You Have Already Added This Word To Your List");
-    //       return
-    //     }
-    //   }
-    //   addedWords.push(searchedWord);
-    //   localStorage.setItem(key, JSON.stringify(addedWords));
-    // }
-    return;
-  };
+    const getWords = () => {
+      if(localStorage.getItem('addedWords')) {
+        return JSON.parse(localStorage.getItem('addedWords'))
+      }
+      return {};
 
-  return {
-    addWord,
-  };
+    };
+
+    return {
+        saveWords,
+        getWords,
+    }
 })();
 
-// Quiz card Module
+
 
 const quizcard = (() => {
   var timecountdown;
@@ -285,9 +287,6 @@ const quizcard = (() => {
   var countWorngAnswer=0;
 
   const getQuizCard = () => {
-    //console.log(index);
-
-    //landingPage[0].style.display = "none";
     appContainer.textContent = "";
 
     $(cardBody).empty();
@@ -310,15 +309,11 @@ const quizcard = (() => {
       }
     }
 
-    console.log(listOfObject);
-
     for (let i = 0; i < 3; i++) {
       if (listOfObject[i] !== undefined) {
         wordsToTest.push(listOfObject[i]);
       }
     }
-
-    console.log(wordsToTest);
 
     if (wordsToTest.length < 3) {
       alert("Please save more than 3 words to start quiz");
@@ -527,8 +522,7 @@ const quizcard = (() => {
   };
 })();
 
-// Start quiz button event listener
-quizStartButton.addEventListener("click", quizcard.getQuizCard);
+
 
 const emoji = (() => {
   let emojis = {};
@@ -576,3 +570,29 @@ const emoji = (() => {
     getEmojis,
   };
 })();
+
+
+// event listeners start --------------------------------
+
+
+searchBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  let searchWord = searchField.value;
+  dictionary.search(searchWord);
+  searchField.value = '';
+  document.getElementById("btn-strt-quiz").disabled = false;
+  clearInterval(timeInterval);
+});
+
+reviewBtn.addEventListener('click', () => {
+  appContainer.textContent = '';
+  appContainer.appendChild(domOps.createReviewCard(dictionary.getWords()));
+});
+
+quizStartButton.addEventListener("click", quizcard.getQuizCard);
+
+
+//event listeners end ------------------------------------
+
+dictionary.setWords(storage.getWords());
+appContainer.appendChild(domOps.createReviewCard(dictionary.getWords()));
