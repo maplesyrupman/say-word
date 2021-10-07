@@ -21,8 +21,13 @@
   border-radius: 50px;
 }
 
-.save-delete-btn {
+.save-btn {
   height: 2.5rem;
+}
+
+.delete-btn {
+  height: 2rem;
+  width: 2rem;
 }
 
 .defCardClass {

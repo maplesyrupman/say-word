@@ -149,10 +149,11 @@ const domOps = (() => {
 
   const createSaveDeleteBtn = (isReview, defObj) => {
     let btn = document.createElement("button");
-    btn.classList = "btn btn-sm save-delete-btn";
+    btn.classList = "btn btn-sm";
     if (isReview) {
       btn.classList.add('btn-danger');
-      btn.textContent = 'Delete Word';
+      btn.classList.add('delete-btn')
+      btn.innerHTML = '<i class="fas fa-times"></i>';
       btn.setAttribute('data-is-save', false);
       btn.addEventListener('click', () => {
         dictionary.removeWord(defObj.word);
@@ -162,11 +163,15 @@ const domOps = (() => {
       });
     } else {
       btn.classList.add('btn-primary');
+      btn.classList.add('save-btn');
       btn.textContent = 'Save Word';
       btn.setAttribute('data-is-save', true);
       btn.addEventListener('click', () => {
         dictionary.addDef(defObj);
         storage.saveWords();
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-secondary');
+        btn.disabled = true;
       })
     }
 
