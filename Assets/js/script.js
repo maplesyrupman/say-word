@@ -6,43 +6,7 @@ const quizStartButton = document.getElementById("btn-strt-quiz");
 const reviewBtn = document.getElementById('review-btn');
 var timeInterval;
 
-let testDefObj = {
-  word: "interest",
-  audioUrl:
-    "https://media.merriam-webster.com/audio/prons/en/us/mp3/i/intere01.mp3",
-  defs: [
-    {
-      fl: "noun",
-      defSentances: [
-        "a feeling that accompanies or causes special attention to something or someone : concern",
-        "something or someone that arouses such attention",
-        "a quality in a thing or person arousing interest",
-      ],
-    },
-    {
-      fl: "adjective",
-      defSentances: [
-        "to engage the attention or arouse the interest of",
-        "to induce or persuade to participate or engage",
-      ],
-    },
-  ],
-};
 
-var testDefObjs = {
-  interest1: testDefObj,
-  interest2: testDefObj,
-  interest3: testDefObj,
-  interest4: testDefObj,
-  interest5: testDefObj,
-};
-var listOfTestObject = [
-  testDefObj,
-  testDefObj,
-  testDefObj,
-  testDefObj,
-  testDefObj,
-];
 
 const dictionary = (() => {
     let words = {};
@@ -112,6 +76,10 @@ const dictionary = (() => {
         return words;
     };
 
+    const setWords = (newWords) => {
+      words = newWords;
+    }
+
     const addDef = (defObj) => {
         words[defObj.word] = defObj;
     }
@@ -121,23 +89,16 @@ const dictionary = (() => {
         stripAstr,
         getAudioUrl,
         getWords,
+        setWords,
         addDef,
         search
     }
 })()
 
-// event listener for search button
-searchBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  let searchWord = searchField.value;
-  dictionary.search(searchWord);
-  searchField.value = '';
-  document.getElementById("btn-strt-quiz").disabled = false;
-  clearInterval(timeInterval);
-});
+
 
 const domOps = (() => {
-  const createDefCard = (defObj) => {
+  const createDefCard = (defObj, isReview=false) => {
     let card = document.createElement("div");
     card.classList = "d-inline-block card defCardClass mt-5";
 
@@ -170,7 +131,7 @@ const domOps = (() => {
 
     saveBtn.addEventListener("click", () => {
       dictionary.addDef(defObj);
-      storage.addWord();
+      storage.saveWords();
     });
 
     for (let i = 0; i < defObj.defs.length; i++) {
@@ -180,6 +141,10 @@ const domOps = (() => {
     card.appendChild(cardBody);
     return card;
   };
+
+  const createSaveOrDeleteBtn = (isReview) => {
+
+  }
 
   const createDefEntry = (defEntry, word) => {
     let entryBox = document.createElement("div");
@@ -201,7 +166,6 @@ const domOps = (() => {
     if (Object.keys(defObjs).length == 0) {
       return createNoSavedWordsMessage();
     }
-
     let reviewCard = document.createElement('div');
     reviewCard.classList = "d-flex flex-column justify-content-center align-items-center";
     let keys = Object.keys(defObjs);
@@ -250,32 +214,26 @@ const domOps = (() => {
   };
 })();
 
-// event listener for reviewWords button
-reviewBtn.addEventListener('click', () => {
-  appContainer.textContent = '';
-  appContainer.appendChild(domOps.createReviewCard(dictionary.getWords()));
-});
 
-// Storage Module
 
 const storage = (() => {
-    const addWord = () => {
+    const saveWords = () => {
         let words = dictionary.getWords();
         localStorage.setItem("addedWords", JSON.stringify(words));
-        return;
     };
-    const getWord = () => {
-        JSON.parse(localStorage.getItem('addedWords'))
-        return;
+
+    const getWords = () => {
+        return JSON.parse(localStorage.getItem('addedWords'))
+
     };
+
     return {
-        addWord,
-        getWord,
+        saveWords,
+        getWords,
     }
 })();
 
 
-// Quiz card Module
 
 const quizcard = (() => {
   var timecountdown;
@@ -292,9 +250,6 @@ const quizcard = (() => {
   var cardBody = document.createElement("div");
 
   const getQuizCard = () => {
-    //console.log(index);
-
-    //landingPage[0].style.display = "none";
     appContainer.textContent = "";
 
     $(cardBody).empty();
@@ -317,15 +272,11 @@ const quizcard = (() => {
       }
     }
 
-    console.log(listOfObject);
-
     for (let i = 0; i < 3; i++) {
       if (listOfObject[i] !== undefined) {
         wordsToTest.push(listOfObject[i]);
       }
     }
-
-    console.log(wordsToTest);
 
     if (wordsToTest.length < 3) {
       alert("Please save more than 3 words to start quiz");
@@ -528,8 +479,7 @@ const quizcard = (() => {
   };
 })();
 
-// Start quiz button event listener
-quizStartButton.addEventListener("click", quizcard.getQuizCard);
+
 
 const emoji = (() => {
   let emojis = {};
@@ -576,3 +526,29 @@ const emoji = (() => {
     getEmojis,
   };
 })();
+
+
+// event listeners start --------------------------------
+
+
+searchBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  let searchWord = searchField.value;
+  dictionary.search(searchWord);
+  searchField.value = '';
+  document.getElementById("btn-strt-quiz").disabled = false;
+  clearInterval(timeInterval);
+});
+
+reviewBtn.addEventListener('click', () => {
+  appContainer.textContent = '';
+  appContainer.appendChild(domOps.createReviewCard(dictionary.getWords()));
+});
+
+quizStartButton.addEventListener("click", quizcard.getQuizCard);
+
+
+//event listeners end ------------------------------------
+
+dictionary.setWords(storage.getWords());
+appContainer.appendChild(domOps.createReviewCard(dictionary.getWords()));
