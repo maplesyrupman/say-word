@@ -74,11 +74,48 @@
       </div>
     </nav>
 
-    <main class='container'>
-      <div id='app-container' class='d-flex flex-column justify-content-center align-items-center'></div>
+    <main class="container">
+      <div
+        id="app-container"
+        class="d-flex flex-column justify-content-center align-items-center"
+      ></div>
     </main>
 
-    <footer id='footer' class='bg-dark d-flex justify-content-center align-items-center'>
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="exampleModalCenter"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalCenterTitle"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5
+              id="modal-title"
+              class="modal-title"
+              id="exampleModalLongTitle"
+            ></h5>
+          </div>
+          <div class="modal-body">
+            <p id="modal-body"></p>
+          </div>
+          <div class="modal-footer">
+            <button
+              id="modal-button"
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer id="footer" class='bg-dark d-flex justify-content-center align-items-center'>
       <div class='text-light fs-4'>Powered by</div>
       <img src='./Assets/images/MWLogo_ForLightBackgrounds.png' style='width: 50px; height: 50px;'>
     </footer>
