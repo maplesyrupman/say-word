@@ -234,11 +234,18 @@ const domOps = (() => {
     return messageContainer;
   }
 
+  const getMainHeight = () => {
+    let navHeight = document.getElementById('nav').clientHeight;
+    let footerHeight = document.getElementById('footer').clientHeight;
+    
+    return visualViewport.height - navHeight - footerHeight;
+  }
   
   return {
     createDefCard,
     createReviewCard,
     createWordNotFound,
+    getMainHeight,
   };
 })();
 
@@ -603,3 +610,10 @@ startQuizLink.addEventListener('click', quizcard.getQuizCard);
 
 dictionary.setWords(storage.getWords());
 appContainer.appendChild(domOps.createReviewCard(dictionary.getWords()));
+
+
+//super hack
+appContainer.style = `min-height: ${domOps.getMainHeight()}px`;
+window.addEventListener('resize', () => {
+appContainer.style = `min-height: ${domOps.getMainHeight()}px`;
+})
