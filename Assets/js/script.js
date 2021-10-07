@@ -281,6 +281,8 @@ const quizcard = (() => {
   var textbox = document.createElement("INPUT");
   var card = document.createElement("div");
   var cardBody = document.createElement("div");
+  var countCorrectAnswer=0;
+  var countWorngAnswer=0;
 
   const getQuizCard = () => {
     //console.log(index);
@@ -455,6 +457,7 @@ const quizcard = (() => {
       corrEmo = emo.smile == undefined ? "1F601" : emo.smile;
       answerPara.innerHTML =
         "Correct" + " " + '<p class="h2">&#x' + corrEmo + "</p>";
+        countCorrectAnswer =countCorrectAnswer+2;
       answerPara.style.textAlign = "center";
     } else {
       console.log(emo.sad);
@@ -462,6 +465,7 @@ const quizcard = (() => {
       answerPara.innerHTML =
         "Wrong" + " " + '<p class="h2">&#x' + wronEmo + "</p>";
       answerPara.style.textAlign = "center";
+      countWorngAnswer=countWorngAnswer-1;
     }
 
     setTimeout(() => {
@@ -490,7 +494,9 @@ const quizcard = (() => {
     buttonDiv.appendChild(buttonHome);
     score.classList.add("quiz-align");
     showScoreTitle.textContent = "YOUR SCORE IS: ";
-    score.innerHTML = "<br/>" + timecountdown;
+    var finalScore = timecountdown<=0?0:timecountdown+countWorngAnswer+countCorrectAnswer;
+    console.log(finalScore);
+    score.innerHTML = "<br/>" +finalScore;
     cardBody.appendChild(showScoreTitle);
     cardBody.appendChild(score);
     cardBody.appendChild(ins);
@@ -566,6 +572,7 @@ const emoji = (() => {
 
   return {
     getSimeleyEmoji,
+    getCryEmoji,
     getEmojis,
   };
 })();
