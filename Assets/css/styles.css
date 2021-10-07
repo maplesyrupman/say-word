@@ -2,6 +2,7 @@
 #app-container {
   padding: 5% 0;
   overflow: auto;
+  
 }
 
 #nav {
@@ -9,8 +10,6 @@
   top: 0px;
   z-index: 12;
 }
-
-
 
 .container {
   overflow: auto;
