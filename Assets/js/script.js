@@ -45,10 +45,10 @@ var listOfTestObject = [
 ];
 
 const dictionary = (() => {
-  let words = {};
+    let words = {};
 
-  const getDef = (word) => {
-    let apiUrl = `https://dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=eef68214-e15e-46fc-8e3b-5c0c4330f2db`;
+    const getDef = (word) => {
+        let apiUrl = `https://dictionaryapi.com/api/v3/references/collegiate/json/${word}?key=eef68214-e15e-46fc-8e3b-5c0c4330f2db`;
 
         fetch(apiUrl).then(response => {
             if (response.ok) {
@@ -65,66 +65,66 @@ const dictionary = (() => {
         })
     }
 
-  const stripAstr = (word) => {
-    let strippedArr = word.split("*");
-    return strippedArr.join("");
-  };
-
-  const createDefObj = (defArr, word) => {
-    let defObj = {
-      word: word,
-      audioUrl: getAudioUrl(defArr),
-      defs: [],
+    const stripAstr = (word) => {
+        let strippedArr = word.split("*");
+        return strippedArr.join("");
     };
-    for (let i = 0; i < defArr.length; i++) {
-      let currentDef = defArr[i];
-      if (stripAstr(currentDef.hwi.hw) == word) {
-        let type = {
-          fl: currentDef.fl,
-          defSentances: currentDef.shortdef,
+
+    const createDefObj = (defArr, word) => {
+        let defObj = {
+            word: word,
+            audioUrl: getAudioUrl(defArr),
+            defs: [],
         };
-        defObj.defs.push(type);
-      } else {
-        break;
-      }
+        for (let i = 0; i < defArr.length; i++) {
+            let currentDef = defArr[i];
+            if (stripAstr(currentDef.hwi.hw) == word) {
+                let type = {
+                    fl: currentDef.fl,
+                    defSentances: currentDef.shortdef,
+                };
+                defObj.defs.push(type);
+            } else {
+                break;
+            }
+        }
+        return defObj;
+    };
+
+    const getAudioUrl = (defArr) => {
+        let baseFilename = defArr[0].hwi.prs[0].sound.audio;
+        let subdirectory =
+            baseFilename.substr(0, 3) == "bix" ?
+            "bix" :
+            baseFilename.substr(0, 3) == "gg" ?
+            "gg" :
+            baseFilename[0];
+        return `https://media.merriam-webster.com/audio/prons/en/us/mp3/${subdirectory}/${baseFilename}.mp3`;
+    };
+
+    const search = (word) => {
+        let cleanWord = word.toLowerCase().trim();
+        appContainer.textContent = '';
+        getDef(cleanWord);
     }
-    return defObj;
-  };
 
-  const getAudioUrl = (defArr) => {
-    let baseFilename = defArr[0].hwi.prs[0].sound.audio;
-    let subdirectory =
-      baseFilename.substr(0, 3) == "bix"
-        ? "bix"
-        : baseFilename.substr(0, 3) == "gg"
-        ? "gg"
-        : baseFilename[0];
-    return `https://media.merriam-webster.com/audio/prons/en/us/mp3/${subdirectory}/${baseFilename}.mp3`;
-  };
+    const getWords = () => {
+        return words;
+    };
 
-  const search = (word) => {
-    let cleanWord = word.toLowerCase().trim();
-    appContainer.textContent = "";
-    getDef(cleanWord);
-  };
+    const addDef = (defObj) => {
+        words[defObj.word] = defObj;
+    }
 
-  const getWords = () => {
-    return words;
-  };
-
-  const addDef = (defObj) => {
-    words[defObj.word] = defObj;
-  };
-
-  return {
-    getDef,
-    stripAstr,
-    getAudioUrl,
-    getWords,
-    addDef,
-    search,
-  };
-})();
+    return {
+        getDef,
+        stripAstr,
+        getAudioUrl,
+        getWords,
+        addDef,
+        search
+    }
+})()
 
 // event listener for search button
 searchBtn.addEventListener("click", (e) => {
@@ -259,31 +259,21 @@ reviewBtn.addEventListener('click', () => {
 // Storage Module
 
 const storage = (() => {
-  const addWord = () => {
-    let words = dictionary.getWords();
-    localStorage.setItem("addedWords", JSON.stringify(words));
-
-    // if (confirmBox) {
-    //   if (addedWords.length > 0) {
-    //     const listOfStoredWords = addedWords.map(function (wordObj) {
-    //       const wordFromList = Object.keys(wordObj)[0];
-    //       return wordFromList;
-    //     });
-    //     if (listOfStoredWords.includes(Object.keys(searchedWord)[0])) {
-    //       window.alert("You Have Already Added This Word To Your List");
-    //       return
-    //     }
-    //   }
-    //   addedWords.push(searchedWord);
-    //   localStorage.setItem(key, JSON.stringify(addedWords));
-    // }
-    return;
-  };
-
-  return {
-    addWord,
-  };
+    const addWord = () => {
+        let words = dictionary.getWords();
+        localStorage.setItem("addedWords", JSON.stringify(words));
+        return;
+    };
+    const getWord = () => {
+        JSON.parse(localStorage.getItem('addedWords'))
+        return;
+    };
+    return {
+        addWord,
+        getWord,
+    }
 })();
+
 
 // Quiz card Module
 
