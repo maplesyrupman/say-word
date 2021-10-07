@@ -587,6 +587,7 @@ searchBtn.addEventListener("click", (e) => {
 reviewBtn.addEventListener('click', () => {
   appContainer.textContent = '';
   appContainer.appendChild(domOps.createReviewCard(dictionary.getWords()));
+  document.getElementById("btn-strt-quiz").disabled = false;
   clearInterval(timeInterval);
 });
 
