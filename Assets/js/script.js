@@ -315,9 +315,9 @@ const quizcard = (() => {
       modButton.addEventListener("click", (e) => {
         e.preventDefault();
         $("#exampleModalCenter").modal("hide");
-       /*appContainer.appendChild(
+       appContainer.appendChild(
           domOps.createReviewCard(dictionary.getWords())
-        );*/
+        );
       });
       modTitle.classList = "fs-4 text-secondary";
       modTitle.innerHTML = "Quiz Error";
