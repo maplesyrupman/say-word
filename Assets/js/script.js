@@ -324,11 +324,11 @@ const quizcard = (() => {
     }
 
     if (index == 0) {
-      timecountdown = 91;
+      timecountdown =wordsToTest.length *15;
       timeInterval = setInterval(function () {
         timecountdown--;
 
-        time.style.color = "blue";
+        //time.style.color = "blue";
         time.innerHTML = "<br/>Time: " + timecountdown;
         console.log(1);
         if (timecountdown === 0) {
@@ -353,6 +353,8 @@ const quizcard = (() => {
     cardBody.classList.add("card-body");
     quizTitle = document.createElement("h3");
     quizTitle.textContent = "Quiz";
+    time.style.color = "blue";
+    time.innerHTML = "<br/>Time: " + timecountdown;
     var quizIns = document.createElement("p");
     quizIns.classList.add("text-lable");
     quizIns.textContent = "The following are definations/meanings of words: ";
