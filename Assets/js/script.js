@@ -3,7 +3,9 @@ const appContainer = document.getElementById("app-container");
 const searchBtn = document.getElementById("search-btn");
 const searchField = document.getElementById("search-field");
 const quizStartButton = document.getElementById("btn-strt-quiz");
-const reviewBtn = document.getElementById("review-btn");
+const reviewBtn = document.getElementById('review-btn');
+const reviewLink = document.getElementById('review-words-dropdown');
+const startQuizLink = document.getElementById('start-quiz-dropdown');
 var timeInterval;
 
 const dictionary = (() => {
@@ -100,7 +102,7 @@ const dictionary = (() => {
 const domOps = (() => {
   const createDefCard = (defObj, isReview = false) => {
     let card = document.createElement("div");
-    card.classList = "d-inline-block card defCardClass mt-5";
+    card.classList = "d-inline-block card w-r mt-5";
 
     let cardBody = document.createElement("div");
     cardBody.classList.add("card-body");
@@ -123,17 +125,9 @@ const domOps = (() => {
     wordBox.appendChild(wordHeading);
     wordBox.appendChild(soundBtn);
     let saveDeleteBtn = createSaveDeleteBtn(isReview, defObj);
-    // let saveBtn = document.createElement("button");
-    // saveBtn.classList = "btn btn-primary btn-sm save-delete-btn";
-    // saveBtn.textContent = "Save Word";
     headingBox.appendChild(wordBox);
     headingBox.appendChild(saveDeleteBtn);
     cardBody.appendChild(headingBox);
-
-    // saveBtn.addEventListener("click", () => {
-    //   dictionary.addDef(defObj);
-    //   storage.saveWords();
-    // });
 
     for (let i = 0; i < defObj.defs.length; i++) {
       cardBody.appendChild(createDefEntry(defObj.defs[i], defObj.word));
@@ -165,8 +159,9 @@ const domOps = (() => {
       btn.addEventListener("click", () => {
         dictionary.addDef(defObj);
         storage.saveWords();
-        btn.classList.remove("btn-primary");
-        btn.classList.add("btn-secondary");
+        btn.textContent = 'Saved'
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-secondary');
         btn.disabled = true;
       });
     }
@@ -600,7 +595,17 @@ reviewBtn.addEventListener("click", () => {
   clearInterval(timeInterval);
 });
 
+reviewLink.addEventListener('click', () => {
+  appContainer.textContent = '';
+  appContainer.appendChild(domOps.createReviewCard(dictionary.getWords()));
+  document.getElementById("btn-strt-quiz").disabled = false;
+  clearInterval(timeInterval);
+})
+
 quizStartButton.addEventListener("click", quizcard.getQuizCard);
+
+startQuizLink.addEventListener('click', quizcard.getQuizCard);
+
 
 //event listeners end ------------------------------------
 
