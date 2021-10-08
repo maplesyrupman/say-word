@@ -142,7 +142,7 @@ li {
   }
 }
 
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 990px) {
   #search-field {
     width: 10rem;
   }
