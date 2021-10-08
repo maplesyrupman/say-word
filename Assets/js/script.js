@@ -315,7 +315,7 @@ const quizcard = (() => {
       modButton.addEventListener("click", (e) => {
         e.preventDefault();
         $("#exampleModalCenter").modal("hide");
-       /*appContainer.appendChild(
+      /* appContainer.appendChild(
           domOps.createReviewCard(dictionary.getWords())
         );*/
         appContainer.textContent = '';
