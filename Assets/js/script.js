@@ -315,16 +315,18 @@ const quizcard = (() => {
       modButton.addEventListener("click", (e) => {
         e.preventDefault();
         $("#exampleModalCenter").modal("hide");
-       appContainer.appendChild(
+      /* appContainer.appendChild(
           domOps.createReviewCard(dictionary.getWords())
-        );
+        );*/
+        appContainer.textContent = '';
+        appContainer.appendChild(domOps.createReviewCard({}));
       });
       modTitle.classList = "fs-4 text-secondary";
       modTitle.innerHTML = "Quiz Error";
       modal.classList = "fs-5 text-secondary";
       modal.innerHTML =
         "<br/>&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbspPlease save three words to start the quiz<br/>";
-      //alert("Please save more than 3 words to start quiz");
+
 
       return;
     }
